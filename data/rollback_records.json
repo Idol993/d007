@@ -1,0 +1,27 @@
+[
+  {
+    "rollback_id": "RLB-D83FEF54",
+    "strategy_id": "STR-063F6DB6",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.2.1",
+    "reason": "监控指标 [逾期异常] 超过阈值",
+    "trigger_metric": "逾期异常",
+    "trigger_value": 0.087,
+    "threshold_value": 0.05,
+    "affected_segments": [
+      "优质客群",
+      "普通客群",
+      "高风险客群"
+    ],
+    "compliance_risk_desc": "逾期异常率飙升可能触发银保监会关注，需评估是否触及不良率监管红线，存在整改风险",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 07:08:38",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  }
+]

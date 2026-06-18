@@ -1,0 +1,26 @@
+[
+  {
+    "timestamp": "2026-06-19 07:08:38",
+    "credit_approval_rate": 0.6444,
+    "fraud_detection_rate": 0.8393,
+    "loan_delay_seconds": 81.4,
+    "overdue_anomaly_rate": 0.0421,
+    "strategy_id": "STR-063F6DB6"
+  },
+  {
+    "timestamp": "2026-06-19 07:08:38",
+    "credit_approval_rate": 0.5589,
+    "fraud_detection_rate": 0.7563,
+    "loan_delay_seconds": 61.5,
+    "overdue_anomaly_rate": 0.0597,
+    "strategy_id": "STR-063F6DB6"
+  },
+  {
+    "timestamp": "2026-06-19 07:08:38",
+    "credit_approval_rate": 0.6049,
+    "fraud_detection_rate": 0.8484,
+    "loan_delay_seconds": 306.2,
+    "overdue_anomaly_rate": 0.0111,
+    "strategy_id": "STR-063F6DB6"
+  }
+]

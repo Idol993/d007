@@ -1,0 +1,4 @@
+﻿record_id,strategy_id,strategy_name,version,risk_level,credit_product,customer_segment,status,publish_time,operator
+REC-895D2F47,STR-AE70DB6E,个人消费贷风控策略V3,v3.2.1,常规策略迭代,个人消费贷,优质客群,全量发布,2026-06-19 07:04:15,管理员
+REC-C4E3FD08,STR-AE70DB6E,个人消费贷风控策略V3,v3.2.1,常规策略迭代,个人消费贷,普通客群,全量发布,2026-06-19 07:04:15,管理员
+REC-585343D9,STR-AE70DB6E,个人消费贷风控策略V3,v3.2.1,常规策略迭代,个人消费贷,高风险客群,全量发布,2026-06-19 07:04:15,管理员
