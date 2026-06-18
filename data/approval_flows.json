@@ -1,0 +1,78 @@
+[
+  {
+    "flow_id": "APV-30415C8D",
+    "strategy_id": "STR-5C4458DC",
+    "risk_level": "常规策略迭代",
+    "status": "已通过",
+    "current_step": 3,
+    "created_at": "2026-06-19 07:39:18",
+    "steps": [
+      {
+        "step_order": 1,
+        "role": "风控",
+        "approver": "风控主管-张伟",
+        "status": "已通过",
+        "comment": "审批通过-自动化模拟",
+        "approved_at": "2026-06-19 07:39:18"
+      },
+      {
+        "step_order": 2,
+        "role": "授信",
+        "approver": "授信主管-李明",
+        "status": "已通过",
+        "comment": "审批通过-自动化模拟",
+        "approved_at": "2026-06-19 07:39:18"
+      },
+      {
+        "step_order": 3,
+        "role": "合规",
+        "approver": "合规专员-王芳",
+        "status": "已通过",
+        "comment": "审批通过-自动化模拟",
+        "approved_at": "2026-06-19 07:39:18"
+      }
+    ]
+  },
+  {
+    "flow_id": "APV-E10D6402",
+    "strategy_id": "STR-F6CEF4E3",
+    "risk_level": "监管风控整改",
+    "status": "已通过",
+    "current_step": 4,
+    "created_at": "2026-06-19 07:39:18",
+    "steps": [
+      {
+        "step_order": 1,
+        "role": "风控",
+        "approver": "风控总监-赵刚",
+        "status": "已通过",
+        "comment": "符合监管要求，审批通过-模拟1",
+        "approved_at": "2026-06-19 07:39:18"
+      },
+      {
+        "step_order": 2,
+        "role": "授信",
+        "approver": "授信总监-周磊",
+        "status": "已通过",
+        "comment": "符合监管要求，审批通过-模拟2",
+        "approved_at": "2026-06-19 07:39:18"
+      },
+      {
+        "step_order": 3,
+        "role": "法务",
+        "approver": "法务总监-黄丽",
+        "status": "已通过",
+        "comment": "符合监管要求，审批通过-模拟3",
+        "approved_at": "2026-06-19 07:39:18"
+      },
+      {
+        "step_order": 4,
+        "role": "合规",
+        "approver": "合规总监-刘洋",
+        "status": "已通过",
+        "comment": "符合监管要求，审批通过-模拟4",
+        "approved_at": "2026-06-19 07:39:18"
+      }
+    ]
+  }
+]

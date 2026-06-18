@@ -1,26 +1,26 @@
 [
   {
-    "timestamp": "2026-06-19 07:08:38",
-    "credit_approval_rate": 0.6444,
-    "fraud_detection_rate": 0.8393,
-    "loan_delay_seconds": 81.4,
-    "overdue_anomaly_rate": 0.0421,
-    "strategy_id": "STR-063F6DB6"
+    "timestamp": "2026-06-19 07:39:18",
+    "credit_approval_rate": 0.8433,
+    "fraud_detection_rate": 0.8811,
+    "loan_delay_seconds": 102.9,
+    "overdue_anomaly_rate": 0.0795,
+    "strategy_id": "STR-5C4458DC"
   },
   {
-    "timestamp": "2026-06-19 07:08:38",
-    "credit_approval_rate": 0.5589,
-    "fraud_detection_rate": 0.7563,
-    "loan_delay_seconds": 61.5,
-    "overdue_anomaly_rate": 0.0597,
-    "strategy_id": "STR-063F6DB6"
+    "timestamp": "2026-06-19 07:39:18",
+    "credit_approval_rate": 0.6279,
+    "fraud_detection_rate": 0.8283,
+    "loan_delay_seconds": 239.4,
+    "overdue_anomaly_rate": 0.0777,
+    "strategy_id": "STR-5C4458DC"
   },
   {
-    "timestamp": "2026-06-19 07:08:38",
-    "credit_approval_rate": 0.6049,
-    "fraud_detection_rate": 0.8484,
-    "loan_delay_seconds": 306.2,
-    "overdue_anomaly_rate": 0.0111,
-    "strategy_id": "STR-063F6DB6"
+    "timestamp": "2026-06-19 07:39:18",
+    "credit_approval_rate": 0.6305,
+    "fraud_detection_rate": 0.8719,
+    "loan_delay_seconds": 245.0,
+    "overdue_anomaly_rate": 0.0655,
+    "strategy_id": "STR-5C4458DC"
   }
 ]

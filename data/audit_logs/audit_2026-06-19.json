@@ -1,326 +1,173 @@
 [
   {
-    "log_id": "AUD-F3B70C31",
+    "log_id": "AUD-D2AF0434",
     "action": "创建策略",
     "operator": "管理员",
     "target_type": "策略",
-    "target_id": "STR-7C96F6F9",
-    "detail": "创建策略 个人消费贷风控策略V3 vv3.2.1",
-    "timestamp": "2026-06-19 07:03:49"
-  },
-  {
-    "log_id": "AUD-2DF91935",
-    "action": "创建策略",
-    "operator": "管理员",
-    "target_type": "策略",
-    "target_id": "STR-AE70DB6E",
-    "detail": "创建策略 个人消费贷风控策略V3 vv3.2.1",
-    "timestamp": "2026-06-19 07:04:15"
-  },
-  {
-    "log_id": "AUD-9777D5CF",
-    "action": "灰度推送",
-    "operator": "系统",
-    "target_type": "策略",
-    "target_id": "STR-AE70DB6E",
-    "detail": "策略 个人消费贷风控策略V3 vv3.2.1 灰度推送至 [优质客群] 比例 10%",
-    "timestamp": "2026-06-19 07:04:15"
-  },
-  {
-    "log_id": "AUD-63B795A3",
-    "action": "灰度推送",
-    "operator": "系统",
-    "target_type": "策略",
-    "target_id": "STR-AE70DB6E",
-    "detail": "策略 个人消费贷风控策略V3 vv3.2.1 灰度推送至 [普通客群] 比例 30%",
-    "timestamp": "2026-06-19 07:04:15"
-  },
-  {
-    "log_id": "AUD-77171F89",
-    "action": "灰度推送",
-    "operator": "系统",
-    "target_type": "策略",
-    "target_id": "STR-AE70DB6E",
-    "detail": "策略 个人消费贷风控策略V3 vv3.2.1 灰度推送至 [高风险客群] 比例 100%",
-    "timestamp": "2026-06-19 07:04:15"
-  },
-  {
-    "log_id": "AUD-CE87D160",
-    "action": "全量发布",
-    "operator": "系统",
-    "target_type": "策略",
-    "target_id": "STR-AE70DB6E",
-    "detail": "策略 个人消费贷风控策略V3 vv3.2.1 已完成全量灰度发布，正式生效",
-    "timestamp": "2026-06-19 07:04:15"
-  },
-  {
-    "log_id": "AUD-3B82CB0B",
-    "action": "风险强制回滚",
-    "operator": "系统",
-    "target_type": "策略",
-    "target_id": "STR-AE70DB6E",
-    "detail": "策略 个人消费贷风控策略V3 vv3.2.1 因 [逾期异常] 超阈值触发强制回滚。当前值 0.087, 阈值 0.05。已恢复至 v3.1.0-stable。受影响客群: 优质客群, 普通客群, 高风险客群",
-    "timestamp": "2026-06-19 07:04:15"
-  },
-  {
-    "log_id": "AUD-BF3B9A10",
-    "action": "恢复稳定策略",
-    "operator": "系统",
-    "target_type": "策略",
-    "target_id": "STR-AE70DB6E",
-    "detail": "策略 个人消费贷风控策略V3 已恢复至上一稳定版本，重启实时风险监控",
-    "timestamp": "2026-06-19 07:04:15"
-  },
-  {
-    "log_id": "AUD-AEA52D18",
-    "action": "回滚演练",
-    "operator": "风控管理员",
-    "target_type": "策略",
-    "target_id": "STR-D54C7663",
-    "detail": "策略 紧急欺诈拦截策略V2 vv2.5.0 完成回滚演练。演练计划: 1. 验证紧急欺诈拦截策略回滚的快速响应机制（要求5分钟内完成回滚）；2. 模拟欺诈识别率下降至70... 欺诈模拟结果: 欺诈模拟校验完成。模拟场景: [设备欺诈]。策略检测率: 85.49%，误报率: 4.10%。欺诈识... 风险处置结果: 风险处置演练完成。执行操作: 触发反欺诈规则集切换; 自动暂停高风险客群授信。处置响应时间: 154...",
-    "timestamp": "2026-06-19 07:04:15"
-  },
-  {
-    "log_id": "AUD-16BA970C",
-    "action": "生成周报",
-    "operator": "系统",
-    "target_type": "报表",
-    "target_id": "20260615-20260621",
-    "detail": "生成信贷风控周报 20260615-20260621，PDF: E:\\work\\d007\\data\\reports\\risk_weekly_20260615-20260621.txt，Excel: E:\\work\\d007\\data\\reports\\risk_weekly_20260615-20260621.csv",
-    "timestamp": "2026-06-19 07:04:15"
-  },
-  {
-    "log_id": "AUD-E7D02959",
-    "action": "查询发布记录",
-    "operator": "用户",
-    "target_type": "发布记录",
-    "target_id": "查询",
-    "detail": "查询条件: 时间[None~None], 产品[None], 客群[None], 版本[None], 结果数: 3",
-    "timestamp": "2026-06-19 07:04:15"
-  },
-  {
-    "log_id": "AUD-5505CC56",
-    "action": "批量导出",
-    "operator": "用户",
-    "target_type": "发布记录",
-    "target_id": "导出",
-    "detail": "导出 3 条记录，格式: csv，文件: E:\\work\\d007\\data\\exports\\publish_export_20260619_070415.csv",
-    "timestamp": "2026-06-19 07:04:15"
-  },
-  {
-    "log_id": "AUD-9BE4E36D",
-    "action": "创建策略",
-    "operator": "管理员",
-    "target_type": "策略",
-    "target_id": "STR-F3CC3B36",
+    "target_id": "STR-5C4458DC",
     "detail": "创建策略 个人消费贷风控策略V3 v3.2.1",
-    "timestamp": "2026-06-19 07:06:13"
+    "timestamp": "2026-06-19 07:39:18"
   },
   {
-    "log_id": "AUD-B8508C99",
+    "log_id": "AUD-26E4D31A",
+    "action": "生成审批流程",
+    "operator": "系统",
+    "target_type": "审批流程",
+    "target_id": "APV-30415C8D",
+    "detail": "策略 个人消费贷风控策略V3 v3.2.1 生成审批流程 APV-30415C8D，风险级别 常规策略迭代，共 3 个审批步骤",
+    "timestamp": "2026-06-19 07:39:18"
+  },
+  {
+    "log_id": "AUD-6097ECF9",
+    "action": "自动审批通过",
+    "operator": "系统",
+    "target_type": "审批流程",
+    "target_id": "APV-30415C8D",
+    "detail": "审批流程 APV-30415C8D 自动完成全流程审批",
+    "timestamp": "2026-06-19 07:39:18"
+  },
+  {
+    "log_id": "AUD-8A533EC8",
     "action": "灰度推送",
     "operator": "系统",
     "target_type": "策略",
-    "target_id": "STR-F3CC3B36",
+    "target_id": "STR-5C4458DC",
     "detail": "策略 个人消费贷风控策略V3 v3.2.1 灰度推送至 [优质客群] 比例 10%",
-    "timestamp": "2026-06-19 07:06:13"
+    "timestamp": "2026-06-19 07:39:18"
   },
   {
-    "log_id": "AUD-8C9FC4D3",
+    "log_id": "AUD-6840BB33",
     "action": "灰度推送",
     "operator": "系统",
     "target_type": "策略",
-    "target_id": "STR-F3CC3B36",
+    "target_id": "STR-5C4458DC",
     "detail": "策略 个人消费贷风控策略V3 v3.2.1 灰度推送至 [普通客群] 比例 30%",
-    "timestamp": "2026-06-19 07:06:13"
+    "timestamp": "2026-06-19 07:39:18"
   },
   {
-    "log_id": "AUD-3404FCB3",
+    "log_id": "AUD-94985F97",
     "action": "灰度推送",
     "operator": "系统",
     "target_type": "策略",
-    "target_id": "STR-F3CC3B36",
+    "target_id": "STR-5C4458DC",
     "detail": "策略 个人消费贷风控策略V3 v3.2.1 灰度推送至 [高风险客群] 比例 100%",
-    "timestamp": "2026-06-19 07:06:13"
+    "timestamp": "2026-06-19 07:39:18"
   },
   {
-    "log_id": "AUD-C62D0F4E",
+    "log_id": "AUD-728555F5",
     "action": "全量发布",
     "operator": "系统",
     "target_type": "策略",
-    "target_id": "STR-F3CC3B36",
+    "target_id": "STR-5C4458DC",
     "detail": "策略 个人消费贷风控策略V3 v3.2.1 已完成全量灰度发布，正式生效",
-    "timestamp": "2026-06-19 07:06:13"
+    "timestamp": "2026-06-19 07:39:18"
   },
   {
-    "log_id": "AUD-574A1DF4",
+    "log_id": "AUD-A450C899",
     "action": "风险强制回滚",
     "operator": "系统",
     "target_type": "策略",
-    "target_id": "STR-F3CC3B36",
+    "target_id": "STR-5C4458DC",
     "detail": "策略 个人消费贷风控策略V3 v3.2.1 因 [逾期异常] 超阈值触发强制回滚。当前值 0.087, 阈值 0.05。已恢复至 v3.1.0-stable。受影响客群: 优质客群, 普通客群, 高风险客群",
-    "timestamp": "2026-06-19 07:06:13"
+    "timestamp": "2026-06-19 07:39:18"
   },
   {
-    "log_id": "AUD-B4D4DBB2",
+    "log_id": "AUD-B64D2364",
     "action": "恢复稳定策略",
     "operator": "系统",
     "target_type": "策略",
-    "target_id": "STR-F3CC3B36",
-    "detail": "策略 个人消费贷风控策略V3 已恢复至上一稳定版本，重启实时风险监控",
-    "timestamp": "2026-06-19 07:06:13"
+    "target_id": "STR-5C4458DC",
+    "detail": "策略 个人消费贷风控策略V3 已恢复至稳定版本 v3.1.0-stable，状态切换为[生效中]，重启实时风险监控",
+    "timestamp": "2026-06-19 07:39:18"
   },
   {
-    "log_id": "AUD-46C6E509",
-    "action": "回滚演练",
-    "operator": "风控管理员",
-    "target_type": "策略",
-    "target_id": "STR-28869255",
-    "detail": "策略 紧急欺诈拦截策略V2 v2.5.0 完成回滚演练。演练计划: 1. 验证紧急欺诈拦截策略回滚的快速响应机制（要求5分钟内完成回滚）；2. 模拟欺诈识别率下降至70... 欺诈模拟结果: 欺诈模拟校验完成。模拟场景: [设备欺诈]。策略检测率: 90.55%，误报率: 3.46%。欺诈识... 风险处置结果: 风险处置演练完成。执行操作: 启动应急预案降级审批流程; 自动暂停高风险客群授信。处置响应时间: 5...",
-    "timestamp": "2026-06-19 07:06:13"
+    "log_id": "AUD-E4506B3B",
+    "action": "生成审批流程",
+    "operator": "系统",
+    "target_type": "审批流程",
+    "target_id": "APV-E10D6402",
+    "detail": "策略 监管整改-授信额度管控 v4.0.0 生成审批流程 APV-E10D6402，风险级别 监管风控整改，共 4 个审批步骤",
+    "timestamp": "2026-06-19 07:39:18"
   },
   {
-    "log_id": "AUD-7EC4D65D",
+    "log_id": "AUD-6A18E31C",
+    "action": "审批通过",
+    "operator": "风控总监-赵刚",
+    "target_type": "审批流程",
+    "target_id": "APV-E10D6402",
+    "detail": "风控总监-赵刚[风控] 审批通过审批流程 APV-E10D6402 的第 1 步，备注: 符合监管要求，审批通过-模拟1",
+    "timestamp": "2026-06-19 07:39:18"
+  },
+  {
+    "log_id": "AUD-08EA4304",
+    "action": "审批通过",
+    "operator": "授信总监-周磊",
+    "target_type": "审批流程",
+    "target_id": "APV-E10D6402",
+    "detail": "授信总监-周磊[授信] 审批通过审批流程 APV-E10D6402 的第 2 步，备注: 符合监管要求，审批通过-模拟2",
+    "timestamp": "2026-06-19 07:39:18"
+  },
+  {
+    "log_id": "AUD-1729B87D",
+    "action": "审批通过",
+    "operator": "法务总监-黄丽",
+    "target_type": "审批流程",
+    "target_id": "APV-E10D6402",
+    "detail": "法务总监-黄丽[法务] 审批通过审批流程 APV-E10D6402 的第 3 步，备注: 符合监管要求，审批通过-模拟3",
+    "timestamp": "2026-06-19 07:39:18"
+  },
+  {
+    "log_id": "AUD-8542B65C",
+    "action": "审批通过",
+    "operator": "合规总监-刘洋",
+    "target_type": "审批流程",
+    "target_id": "APV-E10D6402",
+    "detail": "合规总监-刘洋[合规] 审批通过审批流程 APV-E10D6402 的第 4 步，备注: 符合监管要求，审批通过-模拟4",
+    "timestamp": "2026-06-19 07:39:18"
+  },
+  {
+    "log_id": "AUD-55798C24",
     "action": "生成周报",
     "operator": "系统",
     "target_type": "报表",
     "target_id": "20260615-20260621",
-    "detail": "生成信贷风控周报 20260615-20260621，PDF: E:\\work\\d007\\data\\reports\\risk_weekly_20260615-20260621.txt，Excel: E:\\work\\d007\\data\\reports\\risk_weekly_20260615-20260621.csv",
-    "timestamp": "2026-06-19 07:06:13"
+    "detail": "生成信贷风控周报 20260615-20260621，PDF: E:\\work\\d007\\data\\reports\\risk_weekly_20260615-20260621.pdf，Excel: E:\\work\\d007\\data\\reports\\risk_weekly_20260615-20260621.xlsx",
+    "timestamp": "2026-06-19 07:39:19"
   },
   {
-    "log_id": "AUD-994183EB",
+    "log_id": "AUD-7F0CC095",
     "action": "查询发布记录",
     "operator": "用户",
     "target_type": "发布记录",
     "target_id": "查询",
     "detail": "查询条件: 时间[None~None], 产品[None], 客群[None], 版本[None], 结果数: 3",
-    "timestamp": "2026-06-19 07:06:13"
+    "timestamp": "2026-06-19 07:39:19"
   },
   {
-    "log_id": "AUD-70ECEA0E",
-    "action": "批量导出",
+    "log_id": "AUD-041B3F5D",
+    "action": "批量合规导出",
     "operator": "用户",
-    "target_type": "发布记录",
-    "target_id": "导出",
-    "detail": "导出 3 条记录，格式: csv，文件: E:\\work\\d007\\data\\exports\\publish_export_20260619_070613.csv",
-    "timestamp": "2026-06-19 07:06:13"
+    "target_type": "导出",
+    "target_id": "compliance_export_20260619_073919.zip",
+    "detail": "合规导出打包: 发布3 + 回滚1 + 审批1 + 审计7 条，文件: E:\\work\\d007\\data\\exports\\compliance_export_20260619_073919.zip",
+    "timestamp": "2026-06-19 07:39:19"
   },
   {
-    "log_id": "AUD-6C6F0012",
-    "action": "创建策略",
-    "operator": "管理员",
-    "target_type": "策略",
-    "target_id": "STR-063F6DB6",
-    "detail": "创建策略 个人消费贷风控策略V3 v3.2.1",
-    "timestamp": "2026-06-19 07:08:38"
-  },
-  {
-    "log_id": "AUD-70B0414A",
-    "action": "灰度推送",
-    "operator": "系统",
-    "target_type": "策略",
-    "target_id": "STR-063F6DB6",
-    "detail": "策略 个人消费贷风控策略V3 v3.2.1 灰度推送至 [优质客群] 比例 10%",
-    "timestamp": "2026-06-19 07:08:38"
-  },
-  {
-    "log_id": "AUD-32A9BC63",
-    "action": "灰度推送",
-    "operator": "系统",
-    "target_type": "策略",
-    "target_id": "STR-063F6DB6",
-    "detail": "策略 个人消费贷风控策略V3 v3.2.1 灰度推送至 [普通客群] 比例 30%",
-    "timestamp": "2026-06-19 07:08:38"
-  },
-  {
-    "log_id": "AUD-D6AD77AE",
-    "action": "灰度推送",
-    "operator": "系统",
-    "target_type": "策略",
-    "target_id": "STR-063F6DB6",
-    "detail": "策略 个人消费贷风控策略V3 v3.2.1 灰度推送至 [高风险客群] 比例 100%",
-    "timestamp": "2026-06-19 07:08:38"
-  },
-  {
-    "log_id": "AUD-4F3BE716",
-    "action": "全量发布",
-    "operator": "系统",
-    "target_type": "策略",
-    "target_id": "STR-063F6DB6",
-    "detail": "策略 个人消费贷风控策略V3 v3.2.1 已完成全量灰度发布，正式生效",
-    "timestamp": "2026-06-19 07:08:38"
-  },
-  {
-    "log_id": "AUD-4A2CFE2F",
-    "action": "风险强制回滚",
-    "operator": "系统",
-    "target_type": "策略",
-    "target_id": "STR-063F6DB6",
-    "detail": "策略 个人消费贷风控策略V3 v3.2.1 因 [逾期异常] 超阈值触发强制回滚。当前值 0.087, 阈值 0.05。已恢复至 v3.1.0-stable。受影响客群: 优质客群, 普通客群, 高风险客群",
-    "timestamp": "2026-06-19 07:08:38"
-  },
-  {
-    "log_id": "AUD-AED0869D",
-    "action": "恢复稳定策略",
-    "operator": "系统",
-    "target_type": "策略",
-    "target_id": "STR-063F6DB6",
-    "detail": "策略 个人消费贷风控策略V3 已恢复至上一稳定版本，重启实时风险监控",
-    "timestamp": "2026-06-19 07:08:38"
-  },
-  {
-    "log_id": "AUD-BB7CD8AD",
+    "log_id": "AUD-C3A38BB3",
     "action": "回滚演练",
     "operator": "风控管理员",
     "target_type": "策略",
-    "target_id": "STR-EA932042",
-    "detail": "策略 紧急欺诈拦截策略V2 v2.5.0 完成回滚演练。演练计划: 1. 验证紧急欺诈拦截策略回滚的快速响应机制（要求5分钟内完成回滚）；2. 模拟欺诈识别率下降至70... 欺诈模拟结果: 欺诈模拟校验完成。模拟场景: [中介代办欺诈]。策略检测率: 92.10%，误报率: 3.65%。欺... 风险处置结果: 风险处置演练完成。执行操作: 自动暂停高风险客群授信; 启动应急预案降级审批流程。处置响应时间: 5...",
-    "timestamp": "2026-06-19 07:08:38"
+    "target_id": "STR-64142D5F",
+    "detail": "策略 紧急欺诈拦截策略V2 v2.5.0 完成回滚演练。演练计划: 1. 验证紧急欺诈拦截策略回滚的快速响应机制（要求5分钟内完成回滚）；2. 模拟欺诈识别率下降至70... 欺诈模拟结果: 欺诈模拟校验完成。模拟场景: [中介代办欺诈]。策略检测率: 94.84%，误报率: 3.70%。欺... 风险处置结果: 风险处置演练完成。执行操作: 触发反欺诈规则集切换; 自动暂停高风险客群授信。处置响应时间: 91....",
+    "timestamp": "2026-06-19 07:39:19"
   },
   {
-    "log_id": "AUD-4D102C60",
+    "log_id": "AUD-933F09A5",
     "action": "生成周报",
     "operator": "系统",
     "target_type": "报表",
     "target_id": "20260615-20260621",
-    "detail": "生成信贷风控周报 20260615-20260621，PDF: E:\\work\\d007\\data\\reports\\risk_weekly_20260615-20260621.txt，Excel: E:\\work\\d007\\data\\reports\\risk_weekly_20260615-20260621.csv",
-    "timestamp": "2026-06-19 07:08:38"
-  },
-  {
-    "log_id": "AUD-046C0E5A",
-    "action": "查询发布记录",
-    "operator": "用户",
-    "target_type": "发布记录",
-    "target_id": "查询",
-    "detail": "查询条件: 时间[None~None], 产品[None], 客群[None], 版本[None], 结果数: 3",
-    "timestamp": "2026-06-19 07:08:38"
-  },
-  {
-    "log_id": "AUD-0BB80E6D",
-    "action": "批量导出",
-    "operator": "用户",
-    "target_type": "发布记录",
-    "target_id": "导出",
-    "detail": "导出 3 条记录，格式: csv，文件: E:\\work\\d007\\data\\exports\\publish_export_20260619_070838.csv",
-    "timestamp": "2026-06-19 07:08:38"
-  },
-  {
-    "log_id": "AUD-0EDD6E43",
-    "action": "创建策略",
-    "operator": "风控专员-刘明",
-    "target_type": "策略",
-    "target_id": "STR-3211622D",
-    "detail": "创建风控策略 汽车金融贷风控V1 v20260619.1，风险级别: 紧急欺诈拦截，产品: 汽车金融贷",
-    "timestamp": "2026-06-19 07:08:47"
-  },
-  {
-    "log_id": "AUD-38321F54",
-    "action": "查询发布记录",
-    "operator": "用户",
-    "target_type": "发布记录",
-    "target_id": "查询",
-    "detail": "查询条件: 时间[None~None], 产品[个人消费贷], 客群[None], 版本[None], 结果数: 3",
-    "timestamp": "2026-06-19 07:09:06"
+    "detail": "生成信贷风控周报 20260615-20260621，PDF: E:\\work\\d007\\data\\reports\\risk_weekly_20260615-20260621.pdf，Excel: E:\\work\\d007\\data\\reports\\risk_weekly_20260615-20260621.xlsx",
+    "timestamp": "2026-06-19 07:40:15"
   }
 ]

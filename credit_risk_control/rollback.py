@@ -121,26 +121,21 @@ def generate_rollback_report(record: RollbackRecord) -> str:
 
 
 def restore_previous_strategy(strategy, stable_strategies: list = None):
+    stable_version = strategy.previous_stable_version or "v1.0.0-stable"
     if stable_strategies:
         prev = stable_strategies[-1]
-        strategy.status = StrategyStatus.ACTIVE
-        strategy.version = prev.get("version", strategy.previous_stable_version or "v1.0.0-stable")
-        audit.log(
-            action="恢复稳定策略",
-            operator="系统",
-            target_type="策略",
-            target_id=strategy.strategy_id,
-            detail=f"策略 {strategy.name} 已恢复至稳定版本 {strategy.version}，重启实时风险监控",
-        )
-    else:
-        strategy.status = StrategyStatus.ACTIVE
-        audit.log(
-            action="恢复稳定策略",
-            operator="系统",
-            target_type="策略",
-            target_id=strategy.strategy_id,
-            detail=f"策略 {strategy.name} 已恢复至上一稳定版本，重启实时风险监控",
-        )
+        stable_version = prev.get("version", stable_version)
+
+    strategy.version = stable_version
+    strategy.status = StrategyStatus.ACTIVE
+
+    audit.log(
+        action="恢复稳定策略",
+        operator="系统",
+        target_type="策略",
+        target_id=strategy.strategy_id,
+        detail=f"策略 {strategy.name} 已恢复至稳定版本 {strategy.version}，状态切换为[{strategy.status.value}]，重启实时风险监控",
+    )
 
 
 def _generate_compliance_risk_desc(strategy, violations: list) -> str:
