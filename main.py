@@ -32,6 +32,7 @@ from credit_risk_control import query as query_mod
 from credit_risk_control import audit_log as audit
 from credit_risk_control import storage
 from credit_risk_control import notifier
+from credit_risk_control import task_queue
 
 
 BANNER = r"""
@@ -94,25 +95,37 @@ def create_strategy(args):
 
 def _run_manual_approval(flow, strategy):
     print(f"\n📋 进入人工逐步审批模式，共 {len(flow.steps)} 步")
-    print(f"   (输入 p=通过, j=驳回, q=退出)")
+    print(f"   (输入 p=通过, j=驳回, q=保存退出后续继续处理)")
+
+    final_status = flow.status
+    interrupted = False
 
     for i in range(len(flow.steps)):
         if flow.status in ("已通过", "已驳回"):
+            break
+        if flow.current_step >= len(flow.steps):
             break
         step = flow.steps[flow.current_step]
         print(f"\n   --- 步骤 {step.step_order}/{len(flow.steps)} ---")
         print(f"   角色: [{step.role.value}]")
         print(f"   审批人: {step.approver}")
+        print(f"   已有状态: {step.status}")
+
+        if step.status in ("已通过", "已驳回"):
+            print(f"   (跳过已处理步骤)")
+            flow.current_step += 1
+            continue
 
         while True:
-            choice = input(f"   {step.approver} 是否通过？(p=通过/j=驳回): ").strip().lower()
+            choice = input(f"   {step.approver} 是否通过？(p=通过/j=驳回/q=保存退出): ").strip().lower()
             if choice in ("p", "j", "q"):
                 break
-            print("   无效输入，请输入 p 或 j")
+            print("   无效输入，请输入 p/j/q")
 
         if choice == "q":
-            print("   已退出审批")
-            return flow
+            interrupted = True
+            print(f"   已保存进度后退出，当前处理到第 {step.step_order} 步，可从台账继续处理")
+            break
         if choice == "p":
             comment = input("   审批备注(可选，直接回车跳过): ").strip() or "审批通过-人工"
             flow = approval.step_approve(flow, comment=comment, approved=True)
@@ -123,8 +136,9 @@ def _run_manual_approval(flow, strategy):
             print(f"   ❌ {step.approver} 驳回审批: {comment}")
             break
 
-    print(f"\n   审批流程最终状态: {flow.status}")
-    return flow
+    final_status = flow.status
+    print(f"\n   审批流程最终状态: {final_status}" + (" (已保存进度，可继续)" if interrupted else ""))
+    return flow, interrupted
 
 
 def publish_strategy(args):
@@ -163,32 +177,76 @@ def publish_strategy(args):
         print(f"\n❌ 前置检查未通过，策略发布终止")
         return None
 
-    print(f"\n📋 阶段2: 生成信贷合规审批流程...")
-    flow = approval.generate_approval_flow(strategy)
+    print(f"\n📋 阶段2: 生成/获取信贷合规审批流程...")
+    existing_flows = approval.get_flow_by_strategy(strategy.strategy_id)
+    flow = None
+    for f in existing_flows:
+        if f.status in ("待审批", "审批中"):
+            flow = f
+            print(f"   找到未完成的审批流程: {flow.flow_id}，将继续处理")
+            break
+    if not flow:
+        flow = approval.generate_approval_flow(strategy)
+        print(f"   已新建审批流程: {flow.flow_id}")
+
+    flow.status = "审批中"
+    approval.persist_flow(flow)
+    strategy.status = StrategyStatus.PENDING_APPROVAL
+    storage.save_strategy(strategy)
+
     print(f"   审批流程ID: {flow.flow_id}")
     for step in flow.steps:
-        print(f"   步骤{step.step_order}: [{step.role.value}] {step.approver}")
+        icon = {"待审批": "⏳", "已通过": "✅", "已驳回": "❌"}.get(step.status, "❓")
+        print(f"   步骤{step.step_order}: {icon} [{step.role.value}] {step.approver} - {step.status}")
 
     print(f"\n📋 阶段3: 审批流程")
+    interrupted = False
     if approval_mode == "auto":
         flow = approval.simulate_approval(flow, auto_approve=True)
         for step in flow.steps:
             icon = "✅" if step.status == "已通过" else "❌"
             print(f"   {icon} [{step.role.value}] {step.approver} - {step.status} ({step.approved_at})")
     else:
-        flow = _run_manual_approval(flow, strategy)
+        flow, interrupted = _run_manual_approval(flow, strategy)
 
-    if flow.status != "已通过":
+    if interrupted:
+        strategy.status = StrategyStatus.PENDING_APPROVAL
+        strategy.approval_flow = flow
+        storage.save_strategy(strategy)
+        audit.log(
+            action="审批保存退出",
+            operator="用户",
+            target_type="策略",
+            target_id=strategy.strategy_id,
+            detail=f"策略 {strategy.name} {strategy.version} 审批流程 {flow.flow_id} 中途保存退出，当前进度 step {flow.current_step+1}/{len(flow.steps)}",
+        )
+        print(f"\n💾 审批进度已保存，后续可通过 'python main.py ledger --continue --flow-id {flow.flow_id}' 或 'python main.py publish --strategy-id {strategy.strategy_id} --approval-mode manual' 继续")
+        return strategy
+
+    if flow.status == "已驳回":
         strategy.status = StrategyStatus.APPROVAL_REJECTED
         storage.save_strategy(strategy)
         audit.log(
-            action="审批未通过",
+            action="审批驳回",
+            operator="用户",
+            target_type="策略",
+            target_id=strategy.strategy_id,
+            detail=f"策略 {strategy.name} {strategy.version} 审批流程 {flow.flow_id} 被驳回",
+        )
+        print(f"\n❌ 审批被驳回，策略发布终止")
+        return strategy
+
+    if flow.status != "已通过":
+        strategy.status = StrategyStatus.PENDING_APPROVAL
+        storage.save_strategy(strategy)
+        audit.log(
+            action="审批待继续",
             operator="系统",
             target_type="策略",
             target_id=strategy.strategy_id,
-            detail=f"策略 {strategy.name} {strategy.version} 审批流程 {flow.flow_id} 状态: {flow.status}",
+            detail=f"策略 {strategy.name} {strategy.version} 审批流程 {flow.flow_id} 状态: {flow.status}，待继续",
         )
-        print(f"\n❌ 审批流程未通过（{flow.status}），策略发布终止")
+        print(f"\n⏳ 审批未完成（{flow.status}），请从台账继续处理")
         return strategy
 
     audit.log(
@@ -465,7 +523,139 @@ def list_strategies(args):
     print(f"\n共 {len(strategies)} 条策略记录")
 
 
+def _continue_publish_after_approval(strategy: RiskStrategy, operator: str = "系统") -> RiskStrategy:
+    """审批通过后，继续完成灰度发布、全量发布、监控等流程"""
+    audit.log(
+        action="审批通过",
+        operator=operator,
+        target_type="策略",
+        target_id=strategy.strategy_id,
+        detail=f"策略 {strategy.name} {strategy.version} 审批通过，进入灰度发布",
+    )
+    print(f"\n✅ 审批通过!")
+
+    print(f"\n📋 阶段4: 客群灰度发布")
+    grayscale_result = grayscale.execute_grayscale_release(strategy)
+    print(f"   灰度发布结果: {grayscale_result.get('status')}")
+    for step in grayscale_result.get("steps", []):
+        print(f"   • {step}")
+
+    if not grayscale_result.get("success"):
+        strategy.status = StrategyStatus.ROLLED_BACK
+        storage.save_strategy(strategy)
+        audit.log(
+            action="灰度发布失败",
+            operator="系统",
+            target_type="策略",
+            target_id=strategy.strategy_id,
+            detail=f"策略 {strategy.name} {strategy.version} 灰度发布失败",
+        )
+        print(f"\n❌ 灰度发布失败，策略终止")
+        return strategy
+
+    print(f"\n📋 阶段5: 全量发布")
+    strategy.status = StrategyStatus.FULL_PUBLISH
+    print(f"   已向所有客群推送: {strategy.name} {strategy.version}")
+
+    publish_record = {
+        "record_id": f"PUB-{datetime.now().strftime('%Y%m%d%H%M%S')}",
+        "strategy_id": strategy.strategy_id,
+        "strategy_name": strategy.name,
+        "version": strategy.version,
+        "risk_level": strategy.risk_level.value,
+        "credit_product": strategy.credit_product,
+        "customer_segment": "全客群",
+        "status": "已发布",
+        "publish_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "operator": operator,
+        "rollback_count": 0,
+    }
+    existing = _load_json(config.PUBLISH_RECORDS_FILE)
+    existing.append(publish_record)
+    _save_json(existing, config.PUBLISH_RECORDS_FILE)
+
+    audit.log(
+        action="全量发布",
+        operator=operator,
+        target_type="策略",
+        target_id=strategy.strategy_id,
+        detail=f"策略 {strategy.name} {strategy.version} 全量发布成功",
+    )
+
+    strategy.status = StrategyStatus.ACTIVE
+    storage.save_strategy(strategy)
+
+    print(f"\n✅ 策略发布成功!")
+    print(f"   策略: {strategy.name} {strategy.version}")
+    print(f"   状态: {strategy.status.value}")
+    print(f"   授信产品: {strategy.credit_product}")
+    print(f"   风险级别: {strategy.risk_level.value}")
+    return strategy
+
+
 def approval_ledger(args):
+    if args.continue_flow:
+        flow_id = args.flow_id
+        if not flow_id:
+            print("❌ 请使用 --flow-id 指定要继续的审批流程ID")
+            return
+        flows = approval._load_flows()
+        flow_dict = None
+        for f in flows:
+            if f["flow_id"] == flow_id:
+                flow_dict = f
+                break
+        if not flow_dict:
+            print(f"❌ 未找到审批流程: {flow_id}")
+            return
+        flow = approval._dict_to_flow(flow_dict)
+        strategy_dict = storage.load_strategy(flow.strategy_id)
+        if not strategy_dict:
+            print(f"❌ 未找到策略: {flow.strategy_id}")
+            return
+        strategy = _dict_to_strategy(strategy_dict)
+        print(f"\n🔄 继续审批流程: {flow_id}")
+        print(f"   策略: {strategy.name} {strategy.version}")
+        print(f"   当前步骤: {flow.current_step}")
+        operator = args.operator or flow.steps[flow.current_step].approver
+        if operator:
+            print(f"   操作人: {operator}")
+
+        flow, interrupted = _run_manual_approval(flow, strategy, operator=operator)
+
+        if interrupted:
+            print(f"\n⏸️  审批已保存进度，下次可通过 ledger --continue --flow-id {flow_id} 继续")
+            audit.log(
+                action="审批保存退出",
+                operator=operator or "用户",
+                target_type="审批流程",
+                target_id=flow_id,
+                detail=f"审批流程已保存，当前步骤 {flow.current_step}，可继续处理",
+            )
+        else:
+            if flow.status == "已驳回":
+                strategy.status = StrategyStatus.REJECTED
+                print(f"\n❌ 审批被驳回，策略状态: {strategy.status.value}")
+            else:
+                if strategy.status == StrategyStatus.PENDING_APPROVAL:
+                    print(f"\n✅ 审批已完成，继续发布流程")
+                    strategy.status = StrategyStatus.GRAYSCALE_PUBLISHING
+                    storage.save_strategy(strategy)
+                    published = _continue_publish_after_approval(strategy, operator=operator)
+                    if published:
+                        print(f"\n✅ 发布成功! 策略 {published.name} 状态: {published.status.value}")
+                        return published
+            storage.save_strategy(strategy)
+
+        audit.log(
+            action="审批待继续" if interrupted else f"审批{flow.status}",
+            operator=operator or "用户",
+            target_type="审批流程",
+            target_id=flow_id,
+            detail=f"审批流程ID={flow_id}, 策略ID={flow.strategy_id}, 步骤数={len(flow.steps)}",
+        )
+        return
+
     approver = args.approver
     role = args.role
     risk_level = args.risk_level
@@ -483,7 +673,7 @@ def approval_ledger(args):
         title = "已驳回审批"
     else:
         records = approval.query_approval_ledger(
-            approver=approver, role=role, risk_level=risk_level, status=status
+            approver=approver, role=role, risk_level=risk_level, status=status, ledger_type=ledger_type
         )
         title = "审批台账"
 
@@ -558,20 +748,34 @@ def daemon_mode(args):
 
     def _process_daemon_tasks():
         nonlocal next_report_dt, last_report_info
-        try:
-            while True:
-                task = DAEMON_TASK_QUEUE.get_nowait()
-                if task["type"] == "publish":
-                    print(f"\n📢 [守护线程] 处理发布任务: {task['strategy_id']}")
+        pending_tasks = task_queue.poll_pending_tasks()
+        for filepath, task in pending_tasks:
+            task_queue.mark_task_running(filepath, task)
+            task_type = task.get("type")
+            payload = task.get("payload", {})
+            print(f"\n📢 [守护线程] 收到任务 [{task['task_id']}] {task_type}")
+
+            result = None
+            error = None
+            try:
+                if task_type == "publish":
+                    strategy_id = payload.get("strategy_id")
+                    print(f"   处理发布任务: {strategy_id}")
                     args_obj = argparse.Namespace(
-                        strategy_id=task["strategy_id"],
-                        approval_mode="auto",
-                        monitor=False,
+                        strategy_id=strategy_id,
+                        approval_mode=payload.get("approval_mode", "auto"),
+                        monitor=payload.get("monitor", False),
                         operator="守护进程",
                     )
-                    publish_strategy(args_obj)
-                elif task["type"] == "manual_report":
-                    print(f"\n📢 [守护线程] 执行手动生成周报...")
+                    published = publish_strategy(args_obj)
+                    result = {
+                        "strategy_id": strategy_id,
+                        "status": published.status.value if published else "失败",
+                    }
+                    print(f"   发布任务完成，状态: {published.status.value if published else '失败'}")
+
+                elif task_type == "manual_report":
+                    print(f"   执行手动生成周报...")
                     stats = report_mod.generate_weekly_report(0)
                     last_report_info = {
                         "time": datetime.now().strftime("%H:%M:%S"),
@@ -579,10 +783,24 @@ def daemon_mode(args):
                         "pdf": stats["pdf_path"],
                         "excel": stats["excel_path"],
                     }
-                    print(f"📊 [守护线程] 周报生成完成: {last_report_info['pdf']}")
-                DAEMON_TASK_QUEUE.task_done()
-        except queue.Empty:
-            pass
+                    result = {
+                        "publish_success_rate": stats["publish_success_rate"],
+                        "rollback_count": stats["rollback_count"],
+                        "avg_fraud_rate": stats["avg_fraud_detection_rate"],
+                        "pdf_path": stats["pdf_path"],
+                        "excel_path": stats["excel_path"],
+                    }
+                    print(f"   周报生成完成: {result['pdf_path']}")
+
+            except Exception as ex:
+                error = f"{type(ex).__name__}: {str(ex)}"
+                print(f"   任务失败: {error}")
+                import traceback
+                traceback.print_exc()
+
+            task_queue.complete_task(filepath, task, result, error)
+            result_text = "✅ 成功" if not error else "❌ 失败"
+            print(f"   任务 {task['task_id']} {result_text}")
 
     def _try_generate_weekly():
         nonlocal next_report_dt, last_report_info
@@ -654,8 +872,11 @@ def submit_daemon_publish(args):
     if not s:
         print(f"❌ 未找到策略 {strategy_id}")
         return
-    DAEMON_TASK_QUEUE.put({"type": "publish", "strategy_id": strategy_id})
-    print(f"✅ 已提交策略 {s.get('name')} {s.get('version')} 的发布任务到守护进程")
+    task = task_queue.submit_publish_task(strategy_id, operator=args.operator or "用户")
+    print(f"✅ 已向守护进程提交发布任务")
+    print(f"   任务ID: {task['task_id']}")
+    print(f"   策略: {s.get('name')} {s.get('version')}")
+    print(f"   提交时间: {task['submitted_at']}")
     print("   (请确保守护进程正在运行: python main.py daemon)")
 
 
@@ -748,14 +969,19 @@ def main():
     ledger_parser.add_argument("--role", choices=["风控", "授信", "法务", "合规"], help="审批角色")
     ledger_parser.add_argument("--risk-level", choices=["常规策略迭代", "紧急欺诈拦截", "监管风控整改"], help="风险级别")
     ledger_parser.add_argument("--status", choices=["待审批", "已通过", "已驳回"], help="审批状态")
+    ledger_parser.add_argument("--continue", dest="continue_flow", action="store_true", help="继续未完成的审批流程")
+    ledger_parser.add_argument("--flow-id", help="指定审批流程ID(配合--continue使用)")
+    ledger_parser.add_argument("--operator", help="当前操作人姓名(用于继续审批时)")
 
     daemon_parser = subparsers.add_parser("daemon", help="守护值守模式(自动监控+定时周报+任务处理)")
     daemon_parser.add_argument("--non-interactive", action="store_true", help=argparse.SUPPRESS)
 
     submit_parser = subparsers.add_parser("submit", help="向守护进程提交发布任务")
     submit_parser.add_argument("--strategy-id", required=True, help="策略ID")
+    submit_parser.add_argument("--operator", help="操作人姓名")
 
-    subparsers.add_parser("manual-report", help="在守护进程中手动触发生成周报")
+    manual_report_parser = subparsers.add_parser("manual-report", help="在守护进程中手动触发生成周报")
+    manual_report_parser.add_argument("--operator", help="操作人姓名")
 
     demo_parser = subparsers.add_parser("demo", help="一键完整演示(7大场景)")
     demo_parser.add_argument("--non-interactive", action="store_true", help="非交互模式")
@@ -794,8 +1020,11 @@ def main():
     elif args.command == "submit":
         submit_daemon_publish(args)
     elif args.command == "manual-report":
-        DAEMON_TASK_QUEUE.put({"type": "manual_report"})
-        print("✅ 已向守护进程提交手动生成周报任务")
+        task = task_queue.submit_manual_report_task(operator=args.operator or "用户")
+        print(f"✅ 已向守护进程提交手动周报任务")
+        print(f"   任务ID: {task['task_id']}")
+        print(f"   提交时间: {task['submitted_at']}")
+        print("   (请确保守护进程正在运行: python main.py daemon)")
     else:
         print(BANNER)
         parser.print_help()

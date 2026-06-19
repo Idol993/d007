@@ -120,13 +120,29 @@ def batch_export(
         f for f in _load_json(APPROVAL_FLOWS_FILE)
         if f.get("strategy_id") in strategy_ids
     ]
+    flow_ids = list({f.get("flow_id") for f in approval_flows if f.get("flow_id")})
 
     audit_entries = _load_all_audit_logs(publish_time_start, publish_time_end)
-    relevant_audit = [
-        e for e in audit_entries
-        if e.get("target_id") in strategy_ids
-        or (publish_time_start and publish_time_end and publish_time_start <= e.get("timestamp", "") <= publish_time_end)
-    ]
+    relevant_target_ids = set(strategy_ids + flow_ids)
+
+    relevant_audit = []
+    approval_actions = {
+        "生成审批流程", "自动审批通过", "审批通过", "审批驳回",
+        "审批保存退出", "审批待继续", "审批未通过",
+    }
+    for e in audit_entries:
+        if e.get("target_id") in relevant_target_ids:
+            relevant_audit.append(e)
+            continue
+        if e.get("action") in approval_actions:
+            if e.get("target_id") in relevant_target_ids:
+                relevant_audit.append(e)
+                continue
+        if publish_time_start and publish_time_end:
+            ts = e.get("timestamp", "")
+            if publish_time_start <= ts <= publish_time_end:
+                if e.get("target_id") in relevant_target_ids:
+                    relevant_audit.append(e)
 
     if export_format == "json":
         filename = f"compliance_export_{timestamp}.zip"

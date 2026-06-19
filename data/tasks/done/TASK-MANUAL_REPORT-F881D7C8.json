@@ -1,0 +1,18 @@
+{
+  "task_id": "TASK-MANUAL_REPORT-F881D7C8",
+  "type": "manual_report",
+  "payload": {},
+  "operator": "李四",
+  "submitted_at": "2026-06-19 08:03:38",
+  "status": "done",
+  "result": {
+    "publish_success_rate": 1.0,
+    "rollback_count": 2,
+    "avg_fraud_rate": 0.8429,
+    "pdf_path": "E:\\work\\d007\\data\\reports\\risk_weekly_20260615-20260621.pdf",
+    "excel_path": "E:\\work\\d007\\data\\reports\\risk_weekly_20260615-20260621.xlsx"
+  },
+  "error": null,
+  "completed_at": "2026-06-19 08:04:27",
+  "started_at": "2026-06-19 08:04:27"
+}

@@ -34,5 +34,41 @@
     "status": "全量发布",
     "publish_time": "2026-06-19 07:39:18",
     "operator": "管理员"
+  },
+  {
+    "record_id": "REC-DDFB3A75",
+    "strategy_id": "STR-DC69BB02",
+    "strategy_name": "个人消费贷风控策略V3",
+    "version": "v3.2.1",
+    "risk_level": "常规策略迭代",
+    "credit_product": "个人消费贷",
+    "customer_segment": "优质客群",
+    "status": "全量发布",
+    "publish_time": "2026-06-19 08:02:44",
+    "operator": "管理员"
+  },
+  {
+    "record_id": "REC-6AAE4BF3",
+    "strategy_id": "STR-DC69BB02",
+    "strategy_name": "个人消费贷风控策略V3",
+    "version": "v3.2.1",
+    "risk_level": "常规策略迭代",
+    "credit_product": "个人消费贷",
+    "customer_segment": "普通客群",
+    "status": "全量发布",
+    "publish_time": "2026-06-19 08:02:44",
+    "operator": "管理员"
+  },
+  {
+    "record_id": "REC-38F0C41C",
+    "strategy_id": "STR-DC69BB02",
+    "strategy_name": "个人消费贷风控策略V3",
+    "version": "v3.2.1",
+    "risk_level": "常规策略迭代",
+    "credit_product": "个人消费贷",
+    "customer_segment": "高风险客群",
+    "status": "全量发布",
+    "publish_time": "2026-06-19 08:02:44",
+    "operator": "管理员"
   }
 ]

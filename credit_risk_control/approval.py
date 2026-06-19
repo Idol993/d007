@@ -81,7 +81,7 @@ def _dict_to_flow(d: dict) -> ApprovalFlow:
     )
 
 
-def _persist_flow(flow: ApprovalFlow):
+def persist_flow(flow: ApprovalFlow):
     flows = _load_flows()
     found = False
     for i, f in enumerate(flows):
@@ -117,7 +117,7 @@ def generate_approval_flow(strategy) -> ApprovalFlow:
     )
 
     strategy.approval_flow = flow
-    _persist_flow(flow)
+    persist_flow(flow)
     audit.log(
         action="生成审批流程",
         operator="系统",
@@ -142,7 +142,7 @@ def simulate_approval(flow: ApprovalFlow, auto_approve: bool = True) -> Approval
 
     flow.status = "已通过"
     flow.current_step = len(flow.steps)
-    _persist_flow(flow)
+    persist_flow(flow)
     audit.log(
         action="自动审批通过",
         operator="系统",
@@ -189,7 +189,7 @@ def step_approve(flow: ApprovalFlow, comment: str = "审批通过", approved: bo
             detail=f"{step.approver}[{step.role.value}] 驳回审批流程 {flow.flow_id} 的第 {step.step_order} 步，原因: {comment}",
         )
 
-    _persist_flow(flow)
+    persist_flow(flow)
     return flow
 
 
@@ -215,6 +215,7 @@ def query_approval_ledger(
     role: str = None,
     risk_level: str = None,
     status: str = None,
+    ledger_type: str = "all",
 ) -> list:
     flows = _load_flows()
     result = []
@@ -222,39 +223,112 @@ def query_approval_ledger(
     for f in flows:
         if risk_level and f.get("risk_level") != risk_level:
             continue
-        if status and f.get("status") != status:
-            continue
+        flow_status = f.get("status", "待审批")
 
-        matched_steps = []
-        for step in f.get("steps", []):
-            if approver and approver not in step.get("approver", ""):
+        if ledger_type == "todo":
+            if flow_status in ("已通过", "已驳回"):
                 continue
-            if role and step.get("role") != role:
+            pending_step_idx = f.get("current_step", 0)
+            if pending_step_idx >= len(f.get("steps", [])):
                 continue
-            matched_steps.append(step)
-
-        if not (approver or role) or matched_steps:
+            pending_step = f.get("steps", [])[pending_step_idx]
+            if approver and approver not in pending_step.get("approver", ""):
+                continue
+            if role and pending_step.get("role") != role:
+                continue
+            if status and flow_status != status:
+                continue
             entry = {
                 "flow_id": f["flow_id"],
                 "strategy_id": f["strategy_id"],
                 "risk_level": f["risk_level"],
-                "status": f["status"],
+                "status": flow_status,
                 "current_step": f["current_step"],
                 "created_at": f["created_at"],
-                "steps": matched_steps if (approver or role) else f.get("steps", []),
+                "steps": [pending_step],
             }
             result.append(entry)
+
+        elif ledger_type == "done":
+            matched_steps = []
+            for step in f.get("steps", []):
+                if step.get("status") != "已通过":
+                    continue
+                if approver and approver not in step.get("approver", ""):
+                    continue
+                if role and step.get("role") != role:
+                    continue
+                matched_steps.append(step)
+            if status and flow_status != status:
+                continue
+            if matched_steps:
+                entry = {
+                    "flow_id": f["flow_id"],
+                    "strategy_id": f["strategy_id"],
+                    "risk_level": f["risk_level"],
+                    "status": flow_status,
+                    "current_step": f["current_step"],
+                    "created_at": f["created_at"],
+                    "steps": matched_steps,
+                }
+                result.append(entry)
+
+        elif ledger_type == "rejected":
+            matched_steps = []
+            for step in f.get("steps", []):
+                if step.get("status") != "已驳回":
+                    continue
+                if approver and approver not in step.get("approver", ""):
+                    continue
+                if role and step.get("role") != role:
+                    continue
+                matched_steps.append(step)
+            if status and flow_status != status:
+                continue
+            if matched_steps:
+                entry = {
+                    "flow_id": f["flow_id"],
+                    "strategy_id": f["strategy_id"],
+                    "risk_level": f["risk_level"],
+                    "status": flow_status,
+                    "current_step": f["current_step"],
+                    "created_at": f["created_at"],
+                    "steps": matched_steps,
+                }
+                result.append(entry)
+
+        else:
+            if status and flow_status != status:
+                continue
+            matched_steps = []
+            for step in f.get("steps", []):
+                if approver and approver not in step.get("approver", ""):
+                    continue
+                if role and step.get("role") != role:
+                    continue
+                matched_steps.append(step)
+            if not (approver or role) or matched_steps:
+                entry = {
+                    "flow_id": f["flow_id"],
+                    "strategy_id": f["strategy_id"],
+                    "risk_level": f["risk_level"],
+                    "status": flow_status,
+                    "current_step": f["current_step"],
+                    "created_at": f["created_at"],
+                    "steps": matched_steps if (approver or role) else f.get("steps", []),
+                }
+                result.append(entry)
 
     return result
 
 
 def list_pending_tasks(approver: str = None, role: str = None) -> list:
-    return query_approval_ledger(approver=approver, role=role, status="待审批")
+    return query_approval_ledger(approver=approver, role=role, ledger_type="todo")
 
 
 def list_completed_approvals(approver: str = None, role: str = None) -> list:
-    return query_approval_ledger(approver=approver, role=role, status="已通过")
+    return query_approval_ledger(approver=approver, role=role, ledger_type="done")
 
 
 def list_rejected_approvals(approver: str = None, role: str = None) -> list:
-    return query_approval_ledger(approver=approver, role=role, status="已驳回")
+    return query_approval_ledger(approver=approver, role=role, ledger_type="rejected")

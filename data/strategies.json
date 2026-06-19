@@ -86,13 +86,181 @@
   {
     "strategy_id": "STR-64142D5F",
     "name": "紧急欺诈拦截策略V2",
-    "version": "v2.5.0",
+    "version": "v2.4.0-stable",
     "risk_level": "紧急欺诈拦截",
     "description": "针对新型团伙欺诈的紧急拦截策略",
     "credit_product": "经营性贷款",
     "status": "生效中",
     "created_at": "2026-06-19 07:39:19",
     "updated_at": "2026-06-19 07:39:19",
+    "precheck_results": {},
+    "grayscale_status": {},
+    "monitoring_data": {},
+    "previous_stable_version": "v2.4.0-stable"
+  },
+  {
+    "strategy_id": "STR-F5329018",
+    "name": "个人消费贷风控策略V3",
+    "version": "v3.1.0-stable",
+    "risk_level": "常规策略迭代",
+    "description": "个人消费贷常规策略迭代，优化反欺诈规则引擎",
+    "credit_product": "个人消费贷",
+    "status": "生效中",
+    "created_at": "2026-06-19 08:02:24",
+    "updated_at": "2026-06-19 08:02:24",
+    "precheck_results": {
+      "all_passed": true,
+      "checks": [
+        {
+          "check_name": "风控模型准确率",
+          "passed": true,
+          "value": 0.9387,
+          "threshold": 0.85,
+          "detail": "当前值: 0.9387, 阈值: 0.8500 → 通过"
+        },
+        {
+          "check_name": "反欺诈校验通过率",
+          "passed": true,
+          "value": 0.9305,
+          "threshold": 0.9,
+          "detail": "当前值: 0.9305, 阈值: 0.9000 → 通过"
+        },
+        {
+          "check_name": "征信数据合规性",
+          "passed": true,
+          "value": 0.9786,
+          "threshold": 0.95,
+          "detail": "当前值: 0.9786, 阈值: 0.9500 → 通过"
+        },
+        {
+          "check_name": "授信额度校验",
+          "passed": true,
+          "value": 0.934,
+          "threshold": 0.88,
+          "detail": "当前值: 0.9340, 阈值: 0.8800 → 通过"
+        }
+      ]
+    },
+    "grayscale_status": {
+      "优质客群": {
+        "segment": "优质客群",
+        "ratio": 0.1,
+        "status": "待推送",
+        "started_at": null,
+        "completed_at": null
+      },
+      "普通客群": {
+        "segment": "普通客群",
+        "ratio": 0.3,
+        "status": "待推送",
+        "started_at": null,
+        "completed_at": null
+      },
+      "高风险客群": {
+        "segment": "高风险客群",
+        "ratio": 1.0,
+        "status": "待推送",
+        "started_at": null,
+        "completed_at": null
+      }
+    },
+    "monitoring_data": {},
+    "previous_stable_version": "v3.1.0-stable"
+  },
+  {
+    "strategy_id": "STR-DC69BB02",
+    "name": "个人消费贷风控策略V3",
+    "version": "v3.1.0-stable",
+    "risk_level": "常规策略迭代",
+    "description": "个人消费贷常规策略迭代，优化反欺诈规则引擎",
+    "credit_product": "个人消费贷",
+    "status": "生效中",
+    "created_at": "2026-06-19 08:02:44",
+    "updated_at": "2026-06-19 08:02:44",
+    "precheck_results": {
+      "all_passed": true,
+      "checks": [
+        {
+          "check_name": "风控模型准确率",
+          "passed": false,
+          "value": 0.8316,
+          "threshold": 0.85,
+          "detail": "当前值: 0.8316, 阈值: 0.8500 → 未通过"
+        },
+        {
+          "check_name": "反欺诈校验通过率",
+          "passed": true,
+          "value": 0.9279,
+          "threshold": 0.9,
+          "detail": "当前值: 0.9279, 阈值: 0.9000 → 通过"
+        },
+        {
+          "check_name": "征信数据合规性",
+          "passed": true,
+          "value": 0.9682,
+          "threshold": 0.95,
+          "detail": "当前值: 0.9682, 阈值: 0.9500 → 通过"
+        },
+        {
+          "check_name": "授信额度校验",
+          "passed": true,
+          "value": 0.989,
+          "threshold": 0.88,
+          "detail": "当前值: 0.9890, 阈值: 0.8800 → 通过"
+        }
+      ]
+    },
+    "grayscale_status": {
+      "优质客群": {
+        "segment": "优质客群",
+        "ratio": 0.1,
+        "status": "已推送",
+        "started_at": "2026-06-19 08:02:44",
+        "completed_at": "2026-06-19 08:02:44"
+      },
+      "普通客群": {
+        "segment": "普通客群",
+        "ratio": 0.3,
+        "status": "已推送",
+        "started_at": "2026-06-19 08:02:44",
+        "completed_at": "2026-06-19 08:02:44"
+      },
+      "高风险客群": {
+        "segment": "高风险客群",
+        "ratio": 1.0,
+        "status": "已推送",
+        "started_at": "2026-06-19 08:02:44",
+        "completed_at": "2026-06-19 08:02:44"
+      }
+    },
+    "monitoring_data": {},
+    "previous_stable_version": "v3.1.0-stable"
+  },
+  {
+    "strategy_id": "STR-00DC83BE",
+    "name": "监管整改-授信额度管控",
+    "version": "v4.0.0",
+    "risk_level": "监管风控整改",
+    "description": "落实银保监会2026年3号文授信集中度要求",
+    "credit_product": "经营性贷款",
+    "status": "草稿",
+    "created_at": "2026-06-19 08:02:44",
+    "updated_at": "2026-06-19 08:02:44",
+    "precheck_results": {},
+    "grayscale_status": {},
+    "monitoring_data": {},
+    "previous_stable_version": "v3.9.0-stable"
+  },
+  {
+    "strategy_id": "STR-ABD92615",
+    "name": "紧急欺诈拦截策略V2",
+    "version": "v2.4.0-stable",
+    "risk_level": "紧急欺诈拦截",
+    "description": "针对新型团伙欺诈的紧急拦截策略",
+    "credit_product": "经营性贷款",
+    "status": "生效中",
+    "created_at": "2026-06-19 08:02:45",
+    "updated_at": "2026-06-19 08:02:45",
     "precheck_results": {},
     "grayscale_status": {},
     "monitoring_data": {},

@@ -1,0 +1,19 @@
+{
+  "task_id": "TASK-PUBLISH-AA6410A6",
+  "type": "publish",
+  "payload": {
+    "strategy_id": "STR-F5329018",
+    "approval_mode": "auto",
+    "monitor": false
+  },
+  "operator": "张三",
+  "submitted_at": "2026-06-19 08:03:22",
+  "status": "done",
+  "result": {
+    "strategy_id": "STR-F5329018",
+    "status": "生效中"
+  },
+  "error": null,
+  "completed_at": "2026-06-19 08:04:27",
+  "started_at": "2026-06-19 08:04:27"
+}

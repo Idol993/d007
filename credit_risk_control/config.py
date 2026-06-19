@@ -5,6 +5,9 @@ DATA_DIR = os.path.join(BASE_DIR, "data")
 AUDIT_LOG_DIR = os.path.join(DATA_DIR, "audit_logs")
 REPORT_DIR = os.path.join(DATA_DIR, "reports")
 EXPORT_DIR = os.path.join(DATA_DIR, "exports")
+TASK_QUEUE_DIR = os.path.join(DATA_DIR, "tasks")
+TASK_PENDING_DIR = os.path.join(TASK_QUEUE_DIR, "pending")
+TASK_DONE_DIR = os.path.join(TASK_QUEUE_DIR, "done")
 
 PRECHECK_THRESHOLDS = {
     "风控模型准确率": {"min": 0.85, "unit": "比率"},
