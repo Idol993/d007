@@ -93,8 +93,10 @@ def create_strategy(args):
     return strategy
 
 
-def _run_manual_approval(flow, strategy):
+def _run_manual_approval(flow, strategy, operator=None):
+    operator_display = operator or flow.steps[flow.current_step].approver if flow.current_step < len(flow.steps) else "审批人"
     print(f"\n📋 进入人工逐步审批模式，共 {len(flow.steps)} 步")
+    print(f"   当前操作人: {operator_display}")
     print(f"   (输入 p=通过, j=驳回, q=保存退出后续继续处理)")
 
     final_status = flow.status
@@ -622,8 +624,11 @@ def approval_ledger(args):
             print(f"   操作人: {operator}")
 
         flow, interrupted = _run_manual_approval(flow, strategy, operator=operator)
+        approval.persist_flow(flow)
 
         if interrupted:
+            strategy.status = StrategyStatus.PENDING_APPROVAL
+            storage.save_strategy(strategy)
             print(f"\n⏸️  审批已保存进度，下次可通过 ledger --continue --flow-id {flow_id} 继续")
             audit.log(
                 action="审批保存退出",
@@ -632,28 +637,32 @@ def approval_ledger(args):
                 target_id=flow_id,
                 detail=f"审批流程已保存，当前步骤 {flow.current_step}，可继续处理",
             )
-        else:
-            if flow.status == "已驳回":
-                strategy.status = StrategyStatus.REJECTED
-                print(f"\n❌ 审批被驳回，策略状态: {strategy.status.value}")
-            else:
-                if strategy.status == StrategyStatus.PENDING_APPROVAL:
-                    print(f"\n✅ 审批已完成，继续发布流程")
-                    strategy.status = StrategyStatus.GRAYSCALE_PUBLISHING
-                    storage.save_strategy(strategy)
-                    published = _continue_publish_after_approval(strategy, operator=operator)
-                    if published:
-                        print(f"\n✅ 发布成功! 策略 {published.name} 状态: {published.status.value}")
-                        return published
+        elif flow.status == "已驳回":
+            strategy.status = StrategyStatus.APPROVAL_REJECTED
             storage.save_strategy(strategy)
+            approval.persist_flow(flow)
+            print(f"\n❌ 审批被驳回，策略状态: {strategy.status.value}")
+            audit.log(
+                action="审批未通过",
+                operator=operator or "用户",
+                target_type="审批流程",
+                target_id=flow_id,
+                detail=f"审批流程 {flow_id} 被驳回，策略 {strategy.strategy_id}",
+            )
+        else:
+            if strategy.status == StrategyStatus.PENDING_APPROVAL:
+                print(f"\n✅ 审批已完成，继续发布流程")
+                strategy.status = StrategyStatus.GRAYSCALE_DEPLOYING
+                storage.save_strategy(strategy)
+                approval.persist_flow(flow)
+                published = _continue_publish_after_approval(strategy, operator=operator)
+                if published:
+                    print(f"\n✅ 发布成功! 策略 {published.name} 状态: {published.status.value}")
+                else:
+                    print(f"\n⚠️  发布流程未完成")
+            storage.save_strategy(strategy)
+            approval.persist_flow(flow)
 
-        audit.log(
-            action="审批待继续" if interrupted else f"审批{flow.status}",
-            operator=operator or "用户",
-            target_type="审批流程",
-            target_id=flow_id,
-            detail=f"审批流程ID={flow_id}, 策略ID={flow.strategy_id}, 步骤数={len(flow.steps)}",
-        )
         return
 
     approver = args.approver
@@ -768,10 +777,30 @@ def daemon_mode(args):
                         operator="守护进程",
                     )
                     published = publish_strategy(args_obj)
-                    result = {
-                        "strategy_id": strategy_id,
-                        "status": published.status.value if published else "失败",
+                    failure_statuses = {
+                        StrategyStatus.PRECHECK_FAILED,
+                        StrategyStatus.APPROVAL_REJECTED,
+                        StrategyStatus.ROLLED_BACK,
                     }
+                    if published is None:
+                        result = {
+                            "strategy_id": strategy_id,
+                            "status": "失败",
+                            "_business_failed": True,
+                            "_failure_reason": "前置检查未通过，策略发布终止",
+                        }
+                    elif published.status in failure_statuses:
+                        result = {
+                            "strategy_id": strategy_id,
+                            "status": published.status.value,
+                            "_business_failed": True,
+                            "_failure_reason": f"策略发布失败，阶段: {published.status.value}",
+                        }
+                    else:
+                        result = {
+                            "strategy_id": strategy_id,
+                            "status": published.status.value,
+                        }
                     print(f"   发布任务完成，状态: {published.status.value if published else '失败'}")
 
                 elif task_type == "manual_report":
@@ -880,6 +909,106 @@ def submit_daemon_publish(args):
     print("   (请确保守护进程正在运行: python main.py daemon)")
 
 
+def manage_tasks(args):
+    if getattr(args, "cancel", None):
+        task_id = args.cancel
+        result = task_queue.cancel_task(task_id)
+        if result.get("success"):
+            print(f"✅ 任务 {task_id} 已取消")
+        else:
+            print(f"❌ 取消失败: {result.get('error', '未知错误')}")
+        return
+
+    if getattr(args, "retry", None):
+        task_id = args.retry
+        result = task_queue.retry_task(task_id, operator=args.operator or "用户")
+        if result.get("success"):
+            new_task = result["new_task"]
+            print(f"✅ 已重试任务，新任务ID: {new_task['task_id']}")
+            print(f"   原任务: {result['original_task_id']}")
+            print(f"   提交时间: {new_task['submitted_at']}")
+        else:
+            print(f"❌ 重试失败: {result.get('error', '未知错误')}")
+        return
+
+    if getattr(args, "detail", None):
+        task_id = args.detail
+        task = task_queue.get_task_detail(task_id)
+        if not task:
+            print(f"❌ 未找到任务: {task_id}")
+            return
+        print(f"\n{'='*60}")
+        print(f"任务详情: {task_id}")
+        print(f"{'='*60}")
+        print(f"   任务ID:     {task.get('task_id')}")
+        print(f"   类型:       {task.get('type')}")
+        print(f"   状态:       {task.get('status')}")
+        print(f"   操作人:     {task.get('operator', 'N/A')}")
+        print(f"   提交时间:   {task.get('submitted_at', 'N/A')}")
+        print(f"   开始时间:   {task.get('started_at', 'N/A')}")
+        print(f"   完成时间:   {task.get('completed_at', 'N/A')}")
+        started = task.get('started_at')
+        completed = task.get('completed_at')
+        if started and completed:
+            try:
+                dt_s = datetime.strptime(started, "%Y-%m-%d %H:%M:%S")
+                dt_c = datetime.strptime(completed, "%Y-%m-%d %H:%M:%S")
+                duration = dt_c - dt_s
+                print(f"   执行耗时:   {duration}")
+            except ValueError:
+                print(f"   执行耗时:   无法计算")
+        if task.get('result'):
+            print(f"   结果:       {task['result']}")
+        if task.get('error'):
+            print(f"   错误:       {task['error']}")
+        if task.get('parent_task_id'):
+            print(f"   父任务ID:   {task['parent_task_id']}")
+
+        logs = task_queue.get_task_audit_logs(task_id)
+        if logs:
+            print(f"\n   相关审计日志 ({len(logs)} 条):")
+            for entry in logs:
+                print(f"      [{entry.get('timestamp')}] {entry.get('action')} - {entry.get('detail', '')[:80]}")
+        return
+
+    tasks = task_queue.list_tasks(
+        status_filter=getattr(args, "status", None),
+        task_type=getattr(args, "type", None),
+        operator=getattr(args, "operator", None),
+        strategy_id=getattr(args, "strategy_id", None),
+        time_start=getattr(args, "time_start", None),
+        time_end=getattr(args, "time_end", None),
+    )
+
+    status_counts = {"pending": 0, "running": 0, "done": 0, "failed": 0, "cancelled": 0}
+    for t in tasks:
+        s = t.get("status", "pending")
+        if s in status_counts:
+            status_counts[s] += 1
+
+    print(f"\n{'='*80}")
+    print(f"任务列表 (共 {len(tasks)} 条)")
+    print(f"状态统计: 待处理={status_counts['pending']} 运行中={status_counts['running']} "
+          f"已完成={status_counts['done']} 失败={status_counts['failed']} 已取消={status_counts['cancelled']}")
+    print(f"{'─'*80}")
+
+    if not tasks:
+        print("   暂无任务")
+        return
+
+    for t in tasks:
+        status_icon = {"pending": "⏳", "running": "🔄", "done": "✅", "failed": "❌", "cancelled": "🚫"}.get(t.get("status"), "❓")
+        strategy_info = ""
+        payload = t.get("payload", {})
+        if payload.get("strategy_id"):
+            strategy_info = f" 策略:{payload['strategy_id']}"
+        print(
+            f"  {status_icon} {t['task_id']:<28} 类型:{t.get('type', 'N/A'):<14} "
+            f"状态:{t.get('status'):<10} 操作人:{t.get('operator', 'N/A'):<10} "
+            f"提交:{t.get('submitted_at', 'N/A')}{strategy_info}"
+        )
+
+
 def _dict_to_strategy(d: dict) -> RiskStrategy:
     risk_level_map = {
         "常规策略迭代": RiskLevel.ROUTINE,
@@ -983,6 +1112,17 @@ def main():
     manual_report_parser = subparsers.add_parser("manual-report", help="在守护进程中手动触发生成周报")
     manual_report_parser.add_argument("--operator", help="操作人姓名")
 
+    tasks_parser = subparsers.add_parser("tasks", help="任务管理(查看/取消/重试)")
+    tasks_parser.add_argument("--status", choices=["pending", "running", "done", "failed", "cancelled"], help="按状态筛选")
+    tasks_parser.add_argument("--type", choices=["publish", "manual_report"], dest="type", help="按任务类型筛选")
+    tasks_parser.add_argument("--operator", help="按操作人筛选")
+    tasks_parser.add_argument("--strategy-id", help="按策略ID筛选")
+    tasks_parser.add_argument("--time-start", help="开始时间 YYYY-MM-DD")
+    tasks_parser.add_argument("--time-end", help="结束时间 YYYY-MM-DD")
+    tasks_parser.add_argument("--detail", help="查看任务详情(传入任务ID)")
+    tasks_parser.add_argument("--cancel", help="取消待处理任务(传入任务ID)")
+    tasks_parser.add_argument("--retry", help="重试失败任务(传入任务ID)")
+
     demo_parser = subparsers.add_parser("demo", help="一键完整演示(7大场景)")
     demo_parser.add_argument("--non-interactive", action="store_true", help="非交互模式")
 
@@ -1025,6 +1165,8 @@ def main():
         print(f"   任务ID: {task['task_id']}")
         print(f"   提交时间: {task['submitted_at']}")
         print("   (请确保守护进程正在运行: python main.py daemon)")
+    elif args.command == "tasks":
+        manage_tasks(args)
     else:
         print(BANNER)
         parser.print_help()

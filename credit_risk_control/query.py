@@ -100,6 +100,135 @@ def _write_csv(rows: list, headers: list = None) -> str:
     return buf.getvalue()
 
 
+ACTION_ICON_MAP = {
+    "创建策略": "📝",
+    "提交任务": "📋",
+    "任务完成": "📋",
+    "任务失败": "❌",
+    "前置检查失败": "🔍",
+    "前置检查": "🔍",
+    "生成审批流程": "📋",
+    "审批通过": "✅",
+    "自动审批通过": "✅",
+    "审批驳回": "❌",
+    "审批未通过": "❌",
+    "灰度发布": "🚀",
+    "全量发布": "🚀",
+    "监控告警": "⚠️",
+    "强制回滚": "🔄",
+    "策略回滚": "🔄",
+    "策略发布完成": "🚀",
+    "生成周报": "📊",
+    "批量合规导出": "📦",
+}
+
+
+def _get_action_icon(action: str) -> str:
+    return ACTION_ICON_MAP.get(action, "📌")
+
+
+def _generate_timeline(
+    records: list,
+    rollback_records: list,
+    approval_flows: list,
+    relevant_audit: list,
+    strategy_ids: list,
+) -> str:
+    timeline_events = []
+
+    for e in relevant_audit:
+        timeline_events.append({
+            "timestamp": e.get("timestamp", ""),
+            "icon": _get_action_icon(e.get("action", "")),
+            "action": e.get("action", ""),
+            "detail": e.get("detail", ""),
+            "operator": e.get("operator", ""),
+            "target_type": e.get("target_type", ""),
+            "target_id": e.get("target_id", ""),
+            "source": "audit",
+        })
+
+    for r in records:
+        timeline_events.append({
+            "timestamp": r.get("publish_time", ""),
+            "icon": "🚀",
+            "action": "发布记录",
+            "detail": f"策略 {r.get('strategy_name', '')} {r.get('version', '')} 发布至 {r.get('customer_segment', '')}，状态: {r.get('status', '')}",
+            "operator": r.get("operator", ""),
+            "target_type": "策略",
+            "target_id": r.get("strategy_id", ""),
+            "source": "publish",
+        })
+
+    for r in rollback_records:
+        timeline_events.append({
+            "timestamp": r.get("created_at", ""),
+            "icon": "🔄",
+            "action": "回滚记录",
+            "detail": f"策略 {r.get('strategy_name', '')} {r.get('strategy_version', '')} 回滚，原因: {r.get('reason', '')}",
+            "operator": "系统",
+            "target_type": "策略",
+            "target_id": r.get("strategy_id", ""),
+            "source": "rollback",
+        })
+
+    for f in approval_flows:
+        timeline_events.append({
+            "timestamp": f.get("created_at", ""),
+            "icon": "📋",
+            "action": "审批流程创建",
+            "detail": f"审批流程 {f.get('flow_id', '')} 创建，风险级别: {f.get('risk_level', '')}，状态: {f.get('status', '')}",
+            "operator": "系统",
+            "target_type": "审批流程",
+            "target_id": f.get("flow_id", ""),
+            "source": "approval",
+        })
+        for step in f.get("steps", []):
+            if step.get("approved_at"):
+                step_icon = "✅" if step.get("status") == "已通过" else "❌"
+                timeline_events.append({
+                    "timestamp": step.get("approved_at", ""),
+                    "icon": step_icon,
+                    "action": f"审批步骤{step.get('status', '')}",
+                    "detail": f"{step.get('approver', '')}[{step.get('role', '')}] {step.get('status', '')}，备注: {step.get('comment', '')}",
+                    "operator": step.get("approver", ""),
+                    "target_type": "审批流程",
+                    "target_id": f.get("flow_id", ""),
+                    "source": "approval_step",
+                })
+
+    timeline_events.sort(key=lambda x: x.get("timestamp", ""))
+
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    strategy_ids_str = ", ".join(strategy_ids) if strategy_ids else "全部"
+
+    lines = []
+    lines.append("=" * 40)
+    lines.append("策略发布全链路审计时间线")
+    lines.append("=" * 40)
+    lines.append(f"生成时间: {now_str}")
+    lines.append(f"筛选策略: {strategy_ids_str}")
+    lines.append("=" * 40)
+    lines.append("")
+
+    for ev in timeline_events:
+        ts = ev["timestamp"]
+        icon = ev["icon"]
+        action = ev["action"]
+        detail = ev["detail"]
+        operator = ev["operator"]
+        target_type = ev["target_type"]
+        target_id = ev["target_id"]
+        lines.append(
+            f"[{ts}] {icon} {action} - {detail} ({operator} → {target_type}/{target_id})"
+        )
+
+    lines.append("=" * 40)
+    lines.append(f"共 {len(timeline_events)} 条审计记录")
+
+    return "\n".join(lines)
+
+
 def batch_export(
     records: list,
     export_format: str = "csv",
@@ -144,6 +273,8 @@ def batch_export(
                 if e.get("target_id") in relevant_target_ids:
                     relevant_audit.append(e)
 
+    timeline_text = _generate_timeline(records, rollback_records, approval_flows, relevant_audit, strategy_ids)
+
     if export_format == "json":
         filename = f"compliance_export_{timestamp}.zip"
         filepath = os.path.join(EXPORT_DIR, filename)
@@ -152,6 +283,7 @@ def batch_export(
             zf.writestr("rollback_records.json", json.dumps(rollback_records, ensure_ascii=False, indent=2))
             zf.writestr("approval_flows.json", json.dumps(approval_flows, ensure_ascii=False, indent=2))
             zf.writestr("audit_logs.json", json.dumps(relevant_audit, ensure_ascii=False, indent=2))
+            zf.writestr("audit_timeline.txt", timeline_text)
             readme = (
                 "合规留档导出说明\n"
                 "================\n"
@@ -162,6 +294,7 @@ def batch_export(
                 f"  - rollback_records.json: 回滚记录 {len(rollback_records)} 条\n"
                 f"  - approval_flows.json: 审批记录 {len(approval_flows)} 条\n"
                 f"  - audit_logs.json: 审计日志 {len(relevant_audit)} 条\n"
+                f"  - audit_timeline.txt: 全链路审计时间线\n"
             )
             zf.writestr("README.txt", readme)
     else:
@@ -210,6 +343,7 @@ def batch_export(
                 "target_id", "detail", "timestamp",
             ]
             zf.writestr("audit_logs.csv", _write_csv(relevant_audit, audit_headers))
+            zf.writestr("audit_timeline.txt", timeline_text)
 
             readme = (
                 "合规留档导出说明\n"
@@ -221,6 +355,7 @@ def batch_export(
                 f"  - rollback_records.csv: 回滚记录 {len(rollback_records)} 条\n"
                 f"  - approval_records.csv: 审批记录 {len(approval_rows)} 条\n"
                 f"  - audit_logs.csv: 审计日志 {len(relevant_audit)} 条\n"
+                f"  - audit_timeline.txt: 全链路审计时间线\n"
             )
             zf.writestr("README.txt", readme)
 

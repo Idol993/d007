@@ -70,5 +70,77 @@
     "status": "全量发布",
     "publish_time": "2026-06-19 08:02:44",
     "operator": "管理员"
+  },
+  {
+    "record_id": "REC-F513440A",
+    "strategy_id": "STR-E4431A1B",
+    "strategy_name": "个人消费贷风控策略V3",
+    "version": "v3.2.1",
+    "risk_level": "常规策略迭代",
+    "credit_product": "个人消费贷",
+    "customer_segment": "优质客群",
+    "status": "全量发布",
+    "publish_time": "2026-06-19 08:28:34",
+    "operator": "管理员"
+  },
+  {
+    "record_id": "REC-64824EDC",
+    "strategy_id": "STR-E4431A1B",
+    "strategy_name": "个人消费贷风控策略V3",
+    "version": "v3.2.1",
+    "risk_level": "常规策略迭代",
+    "credit_product": "个人消费贷",
+    "customer_segment": "普通客群",
+    "status": "全量发布",
+    "publish_time": "2026-06-19 08:28:34",
+    "operator": "管理员"
+  },
+  {
+    "record_id": "REC-2971E926",
+    "strategy_id": "STR-E4431A1B",
+    "strategy_name": "个人消费贷风控策略V3",
+    "version": "v3.2.1",
+    "risk_level": "常规策略迭代",
+    "credit_product": "个人消费贷",
+    "customer_segment": "高风险客群",
+    "status": "全量发布",
+    "publish_time": "2026-06-19 08:28:34",
+    "operator": "管理员"
+  },
+  {
+    "record_id": "REC-E5D0AAA3",
+    "strategy_id": "STR-7850C066",
+    "strategy_name": "个人消费贷风控策略V3",
+    "version": "v3.2.1",
+    "risk_level": "常规策略迭代",
+    "credit_product": "个人消费贷",
+    "customer_segment": "优质客群",
+    "status": "全量发布",
+    "publish_time": "2026-06-19 08:38:58",
+    "operator": "管理员"
+  },
+  {
+    "record_id": "REC-695B44C2",
+    "strategy_id": "STR-7850C066",
+    "strategy_name": "个人消费贷风控策略V3",
+    "version": "v3.2.1",
+    "risk_level": "常规策略迭代",
+    "credit_product": "个人消费贷",
+    "customer_segment": "普通客群",
+    "status": "全量发布",
+    "publish_time": "2026-06-19 08:38:58",
+    "operator": "管理员"
+  },
+  {
+    "record_id": "REC-8AE46EBC",
+    "strategy_id": "STR-7850C066",
+    "strategy_name": "个人消费贷风控策略V3",
+    "version": "v3.2.1",
+    "risk_level": "常规策略迭代",
+    "credit_product": "个人消费贷",
+    "customer_segment": "高风险客群",
+    "status": "全量发布",
+    "publish_time": "2026-06-19 08:38:58",
+    "operator": "管理员"
   }
 ]

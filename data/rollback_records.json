@@ -1404,5 +1404,674 @@
       "贷后",
       "合规"
     ]
+  },
+  {
+    "rollback_id": "RLB-E8B7C2A2",
+    "strategy_id": "STR-5C4458DC",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [欺诈识别率] 超过阈值",
+    "trigger_metric": "欺诈识别率",
+    "trigger_value": 0.7804,
+    "threshold_value": 0.8,
+    "affected_segments": [
+      "优质客群",
+      "普通客群",
+      "高风险客群"
+    ],
+    "compliance_risk_desc": "欺诈识别率不足直接违反《反洗钱法》及反欺诈监管要求，可能造成信贷资金流向欺诈团伙",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:19:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-AC905911",
+    "strategy_id": "STR-DC69BB02",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [逾期异常] 超过阈值",
+    "trigger_metric": "逾期异常",
+    "trigger_value": 0.0701,
+    "threshold_value": 0.05,
+    "affected_segments": [
+      "优质客群",
+      "普通客群",
+      "高风险客群"
+    ],
+    "compliance_risk_desc": "逾期异常率飙升可能触发银保监会关注，需评估是否触及不良率监管红线，存在整改风险",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:19:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-39BBCDC0",
+    "strategy_id": "STR-ABD92615",
+    "strategy_name": "紧急欺诈拦截策略V2",
+    "strategy_version": "v2.4.0-stable",
+    "reason": "监控指标 [欺诈识别率] 超过阈值",
+    "trigger_metric": "欺诈识别率",
+    "trigger_value": 0.7774,
+    "threshold_value": 0.8,
+    "affected_segments": [],
+    "compliance_risk_desc": "【高风险-紧急欺诈拦截】该策略用于欺诈拦截，指标异常可能导致大规模欺诈事件。欺诈识别率不足直接违反《反洗钱法》及反欺诈监管要求，可能造成信贷资金流向欺诈团伙",
+    "previous_stable_version": "v2.4.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:19:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-E38D6167",
+    "strategy_id": "STR-5C4458DC",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [授信通过率] 超过阈值",
+    "trigger_metric": "授信通过率",
+    "trigger_value": 0.5566,
+    "threshold_value": 0.6,
+    "affected_segments": [
+      "优质客群",
+      "普通客群",
+      "高风险客群"
+    ],
+    "compliance_risk_desc": "授信通过率异常可能导致合规风险：审批过松可能违反银保监会贷前审查要求，审批过严可能违反普惠金融政策导向",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:20:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-20C18508",
+    "strategy_id": "STR-F5329018",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [放款延迟] 超过阈值",
+    "trigger_metric": "放款延迟",
+    "trigger_value": 398.3,
+    "threshold_value": 300,
+    "affected_segments": [],
+    "compliance_risk_desc": "放款延迟超限可能违反贷款合同约定时限，存在合同违约风险及客户投诉风险；逾期异常率飙升可能触发银保监会关注，需评估是否触及不良率监管红线，存在整改风险",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:20:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-B870175E",
+    "strategy_id": "STR-DC69BB02",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [授信通过率] 超过阈值",
+    "trigger_metric": "授信通过率",
+    "trigger_value": 0.583,
+    "threshold_value": 0.6,
+    "affected_segments": [
+      "优质客群",
+      "普通客群",
+      "高风险客群"
+    ],
+    "compliance_risk_desc": "授信通过率异常可能导致合规风险：审批过松可能违反银保监会贷前审查要求，审批过严可能违反普惠金融政策导向",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:20:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-0A4A9934",
+    "strategy_id": "STR-ABD92615",
+    "strategy_name": "紧急欺诈拦截策略V2",
+    "strategy_version": "v2.4.0-stable",
+    "reason": "监控指标 [欺诈识别率] 超过阈值",
+    "trigger_metric": "欺诈识别率",
+    "trigger_value": 0.782,
+    "threshold_value": 0.8,
+    "affected_segments": [],
+    "compliance_risk_desc": "【高风险-紧急欺诈拦截】该策略用于欺诈拦截，指标异常可能导致大规模欺诈事件。欺诈识别率不足直接违反《反洗钱法》及反欺诈监管要求，可能造成信贷资金流向欺诈团伙；放款延迟超限可能违反贷款合同约定时限，存在合同违约风险及客户投诉风险",
+    "previous_stable_version": "v2.4.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:20:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-6EE8411B",
+    "strategy_id": "STR-5C4458DC",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [授信通过率] 超过阈值",
+    "trigger_metric": "授信通过率",
+    "trigger_value": 0.5715,
+    "threshold_value": 0.6,
+    "affected_segments": [
+      "优质客群",
+      "普通客群",
+      "高风险客群"
+    ],
+    "compliance_risk_desc": "授信通过率异常可能导致合规风险：审批过松可能违反银保监会贷前审查要求，审批过严可能违反普惠金融政策导向；欺诈识别率不足直接违反《反洗钱法》及反欺诈监管要求，可能造成信贷资金流向欺诈团伙",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:21:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-630D4B6B",
+    "strategy_id": "STR-F5329018",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [欺诈识别率] 超过阈值",
+    "trigger_metric": "欺诈识别率",
+    "trigger_value": 0.7883,
+    "threshold_value": 0.8,
+    "affected_segments": [],
+    "compliance_risk_desc": "欺诈识别率不足直接违反《反洗钱法》及反欺诈监管要求，可能造成信贷资金流向欺诈团伙；逾期异常率飙升可能触发银保监会关注，需评估是否触及不良率监管红线，存在整改风险",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:21:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-24B06881",
+    "strategy_id": "STR-DC69BB02",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [欺诈识别率] 超过阈值",
+    "trigger_metric": "欺诈识别率",
+    "trigger_value": 0.7658,
+    "threshold_value": 0.8,
+    "affected_segments": [
+      "优质客群",
+      "普通客群",
+      "高风险客群"
+    ],
+    "compliance_risk_desc": "欺诈识别率不足直接违反《反洗钱法》及反欺诈监管要求，可能造成信贷资金流向欺诈团伙；逾期异常率飙升可能触发银保监会关注，需评估是否触及不良率监管红线，存在整改风险",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:21:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-A9192C56",
+    "strategy_id": "STR-ABD92615",
+    "strategy_name": "紧急欺诈拦截策略V2",
+    "strategy_version": "v2.4.0-stable",
+    "reason": "监控指标 [逾期异常] 超过阈值",
+    "trigger_metric": "逾期异常",
+    "trigger_value": 0.0713,
+    "threshold_value": 0.05,
+    "affected_segments": [],
+    "compliance_risk_desc": "【高风险-紧急欺诈拦截】该策略用于欺诈拦截，指标异常可能导致大规模欺诈事件。逾期异常率飙升可能触发银保监会关注，需评估是否触及不良率监管红线，存在整改风险",
+    "previous_stable_version": "v2.4.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:21:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-121C7144",
+    "strategy_id": "STR-5C4458DC",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [欺诈识别率] 超过阈值",
+    "trigger_metric": "欺诈识别率",
+    "trigger_value": 0.7523,
+    "threshold_value": 0.8,
+    "affected_segments": [
+      "优质客群",
+      "普通客群",
+      "高风险客群"
+    ],
+    "compliance_risk_desc": "欺诈识别率不足直接违反《反洗钱法》及反欺诈监管要求，可能造成信贷资金流向欺诈团伙；放款延迟超限可能违反贷款合同约定时限，存在合同违约风险及客户投诉风险",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:22:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-8E5F6BA9",
+    "strategy_id": "STR-64142D5F",
+    "strategy_name": "紧急欺诈拦截策略V2",
+    "strategy_version": "v2.4.0-stable",
+    "reason": "监控指标 [欺诈识别率] 超过阈值",
+    "trigger_metric": "欺诈识别率",
+    "trigger_value": 0.7538,
+    "threshold_value": 0.8,
+    "affected_segments": [],
+    "compliance_risk_desc": "【高风险-紧急欺诈拦截】该策略用于欺诈拦截，指标异常可能导致大规模欺诈事件。欺诈识别率不足直接违反《反洗钱法》及反欺诈监管要求，可能造成信贷资金流向欺诈团伙；放款延迟超限可能违反贷款合同约定时限，存在合同违约风险及客户投诉风险；逾期异常率飙升可能触发银保监会关注，需评估是否触及不良率监管红线，存在整改风险",
+    "previous_stable_version": "v2.4.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:22:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-EACFFCC1",
+    "strategy_id": "STR-DC69BB02",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [欺诈识别率] 超过阈值",
+    "trigger_metric": "欺诈识别率",
+    "trigger_value": 0.7605,
+    "threshold_value": 0.8,
+    "affected_segments": [
+      "优质客群",
+      "普通客群",
+      "高风险客群"
+    ],
+    "compliance_risk_desc": "欺诈识别率不足直接违反《反洗钱法》及反欺诈监管要求，可能造成信贷资金流向欺诈团伙；逾期异常率飙升可能触发银保监会关注，需评估是否触及不良率监管红线，存在整改风险",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:22:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-AE3D3038",
+    "strategy_id": "STR-F5329018",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [欺诈识别率] 超过阈值",
+    "trigger_metric": "欺诈识别率",
+    "trigger_value": 0.7834,
+    "threshold_value": 0.8,
+    "affected_segments": [],
+    "compliance_risk_desc": "欺诈识别率不足直接违反《反洗钱法》及反欺诈监管要求，可能造成信贷资金流向欺诈团伙",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:23:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-12800ACE",
+    "strategy_id": "STR-DC69BB02",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [放款延迟] 超过阈值",
+    "trigger_metric": "放款延迟",
+    "trigger_value": 386.2,
+    "threshold_value": 300,
+    "affected_segments": [
+      "优质客群",
+      "普通客群",
+      "高风险客群"
+    ],
+    "compliance_risk_desc": "放款延迟超限可能违反贷款合同约定时限，存在合同违约风险及客户投诉风险；逾期异常率飙升可能触发银保监会关注，需评估是否触及不良率监管红线，存在整改风险",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:23:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-16A6D639",
+    "strategy_id": "STR-ABD92615",
+    "strategy_name": "紧急欺诈拦截策略V2",
+    "strategy_version": "v2.4.0-stable",
+    "reason": "监控指标 [欺诈识别率] 超过阈值",
+    "trigger_metric": "欺诈识别率",
+    "trigger_value": 0.7804,
+    "threshold_value": 0.8,
+    "affected_segments": [],
+    "compliance_risk_desc": "【高风险-紧急欺诈拦截】该策略用于欺诈拦截，指标异常可能导致大规模欺诈事件。欺诈识别率不足直接违反《反洗钱法》及反欺诈监管要求，可能造成信贷资金流向欺诈团伙；放款延迟超限可能违反贷款合同约定时限，存在合同违约风险及客户投诉风险",
+    "previous_stable_version": "v2.4.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:23:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-1C57287D",
+    "strategy_id": "STR-64142D5F",
+    "strategy_name": "紧急欺诈拦截策略V2",
+    "strategy_version": "v2.4.0-stable",
+    "reason": "监控指标 [放款延迟] 超过阈值",
+    "trigger_metric": "放款延迟",
+    "trigger_value": 357.1,
+    "threshold_value": 300,
+    "affected_segments": [],
+    "compliance_risk_desc": "【高风险-紧急欺诈拦截】该策略用于欺诈拦截，指标异常可能导致大规模欺诈事件。放款延迟超限可能违反贷款合同约定时限，存在合同违约风险及客户投诉风险；逾期异常率飙升可能触发银保监会关注，需评估是否触及不良率监管红线，存在整改风险",
+    "previous_stable_version": "v2.4.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:24:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-C56BFEC0",
+    "strategy_id": "STR-F5329018",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [逾期异常] 超过阈值",
+    "trigger_metric": "逾期异常",
+    "trigger_value": 0.0786,
+    "threshold_value": 0.05,
+    "affected_segments": [],
+    "compliance_risk_desc": "逾期异常率飙升可能触发银保监会关注，需评估是否触及不良率监管红线，存在整改风险",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:24:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-290B73C1",
+    "strategy_id": "STR-DC69BB02",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [授信通过率] 超过阈值",
+    "trigger_metric": "授信通过率",
+    "trigger_value": 0.5574,
+    "threshold_value": 0.6,
+    "affected_segments": [
+      "优质客群",
+      "普通客群",
+      "高风险客群"
+    ],
+    "compliance_risk_desc": "授信通过率异常可能导致合规风险：审批过松可能违反银保监会贷前审查要求，审批过严可能违反普惠金融政策导向；欺诈识别率不足直接违反《反洗钱法》及反欺诈监管要求，可能造成信贷资金流向欺诈团伙；放款延迟超限可能违反贷款合同约定时限，存在合同违约风险及客户投诉风险；逾期异常率飙升可能触发银保监会关注，需评估是否触及不良率监管红线，存在整改风险",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:24:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-E4044B65",
+    "strategy_id": "STR-ABD92615",
+    "strategy_name": "紧急欺诈拦截策略V2",
+    "strategy_version": "v2.4.0-stable",
+    "reason": "监控指标 [欺诈识别率] 超过阈值",
+    "trigger_metric": "欺诈识别率",
+    "trigger_value": 0.7865,
+    "threshold_value": 0.8,
+    "affected_segments": [],
+    "compliance_risk_desc": "【高风险-紧急欺诈拦截】该策略用于欺诈拦截，指标异常可能导致大规模欺诈事件。欺诈识别率不足直接违反《反洗钱法》及反欺诈监管要求，可能造成信贷资金流向欺诈团伙；放款延迟超限可能违反贷款合同约定时限，存在合同违约风险及客户投诉风险；逾期异常率飙升可能触发银保监会关注，需评估是否触及不良率监管红线，存在整改风险",
+    "previous_stable_version": "v2.4.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:24:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-382BFC7F",
+    "strategy_id": "STR-5C4458DC",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [放款延迟] 超过阈值",
+    "trigger_metric": "放款延迟",
+    "trigger_value": 315.7,
+    "threshold_value": 300,
+    "affected_segments": [
+      "优质客群",
+      "普通客群",
+      "高风险客群"
+    ],
+    "compliance_risk_desc": "放款延迟超限可能违反贷款合同约定时限，存在合同违约风险及客户投诉风险；逾期异常率飙升可能触发银保监会关注，需评估是否触及不良率监管红线，存在整改风险",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:25:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-C156D2CF",
+    "strategy_id": "STR-F5329018",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [放款延迟] 超过阈值",
+    "trigger_metric": "放款延迟",
+    "trigger_value": 337.3,
+    "threshold_value": 300,
+    "affected_segments": [],
+    "compliance_risk_desc": "放款延迟超限可能违反贷款合同约定时限，存在合同违约风险及客户投诉风险",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:25:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-2523A386",
+    "strategy_id": "STR-5C4458DC",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [放款延迟] 超过阈值",
+    "trigger_metric": "放款延迟",
+    "trigger_value": 372.7,
+    "threshold_value": 300,
+    "affected_segments": [
+      "优质客群",
+      "普通客群",
+      "高风险客群"
+    ],
+    "compliance_risk_desc": "放款延迟超限可能违反贷款合同约定时限，存在合同违约风险及客户投诉风险",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:26:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-EC3BDD75",
+    "strategy_id": "STR-64142D5F",
+    "strategy_name": "紧急欺诈拦截策略V2",
+    "strategy_version": "v2.4.0-stable",
+    "reason": "监控指标 [授信通过率] 超过阈值",
+    "trigger_metric": "授信通过率",
+    "trigger_value": 0.9656,
+    "threshold_value": 0.6,
+    "affected_segments": [],
+    "compliance_risk_desc": "【高风险-紧急欺诈拦截】该策略用于欺诈拦截，指标异常可能导致大规模欺诈事件。授信通过率异常可能导致合规风险：审批过松可能违反银保监会贷前审查要求，审批过严可能违反普惠金融政策导向",
+    "previous_stable_version": "v2.4.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:26:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-7C333B23",
+    "strategy_id": "STR-DC69BB02",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.1.0-stable",
+    "reason": "监控指标 [逾期异常] 超过阈值",
+    "trigger_metric": "逾期异常",
+    "trigger_value": 0.0665,
+    "threshold_value": 0.05,
+    "affected_segments": [
+      "优质客群",
+      "普通客群",
+      "高风险客群"
+    ],
+    "compliance_risk_desc": "逾期异常率飙升可能触发银保监会关注，需评估是否触及不良率监管红线，存在整改风险",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:26:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-87A68563",
+    "strategy_id": "STR-ABD92615",
+    "strategy_name": "紧急欺诈拦截策略V2",
+    "strategy_version": "v2.4.0-stable",
+    "reason": "监控指标 [欺诈识别率] 超过阈值",
+    "trigger_metric": "欺诈识别率",
+    "trigger_value": 0.7829,
+    "threshold_value": 0.8,
+    "affected_segments": [],
+    "compliance_risk_desc": "【高风险-紧急欺诈拦截】该策略用于欺诈拦截，指标异常可能导致大规模欺诈事件。欺诈识别率不足直接违反《反洗钱法》及反欺诈监管要求，可能造成信贷资金流向欺诈团伙",
+    "previous_stable_version": "v2.4.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:26:28",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-6BBD5524",
+    "strategy_id": "STR-E4431A1B",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.2.1",
+    "reason": "监控指标 [逾期异常] 超过阈值",
+    "trigger_metric": "逾期异常",
+    "trigger_value": 0.087,
+    "threshold_value": 0.05,
+    "affected_segments": [
+      "优质客群",
+      "普通客群",
+      "高风险客群"
+    ],
+    "compliance_risk_desc": "逾期异常率飙升可能触发银保监会关注，需评估是否触及不良率监管红线，存在整改风险",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:28:34",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
+  },
+  {
+    "rollback_id": "RLB-9E189564",
+    "strategy_id": "STR-7850C066",
+    "strategy_name": "个人消费贷风控策略V3",
+    "strategy_version": "v3.2.1",
+    "reason": "监控指标 [逾期异常] 超过阈值",
+    "trigger_metric": "逾期异常",
+    "trigger_value": 0.087,
+    "threshold_value": 0.05,
+    "affected_segments": [
+      "优质客群",
+      "普通客群",
+      "高风险客群"
+    ],
+    "compliance_risk_desc": "逾期异常率飙升可能触发银保监会关注，需评估是否触及不良率监管红线，存在整改风险",
+    "previous_stable_version": "v3.1.0-stable",
+    "status": "已回滚",
+    "created_at": "2026-06-19 08:38:58",
+    "notified_roles": [
+      "风控",
+      "授信",
+      "贷后",
+      "合规"
+    ]
   }
 ]
